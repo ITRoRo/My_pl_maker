@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingsActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical"
+
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/back"
+                android:layout_width="@dimen/twenty_four_dp"
+                android:layout_height="@dimen/twenty_four_dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/back"
+                android:backgroundTint="@color/white"
+                />
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="14dp"
+                android:gravity="center_vertical"
+                android:paddingBottom="16dp"
+                android:text="@string/nas"
+                android:textColor="@color/black_text"
+                android:textSize="22sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/twenty_four_dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+
+
+                >
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="@dimen/twenty_one_dp"
+                    android:layout_marginBottom="@dimen/twenty_one_dp"
+                    android:layout_weight="1"
+                    android:text="@string/black_tm"
+                    android:textColor="@color/black_text"
+                    android:textSize="16sp" />
+
+                <Switch
+                    android:layout_width="56dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="6dp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="@dimen/twenty_one_dp"
+                    android:layout_marginBottom="@dimen/twenty_one_dp"
+                    android:layout_gravity="center"
+                    android:text="@string/share"
+                    android:layout_weight="1"
+                    android:textColor="@color/black_text"
+                    android:textSize="16sp"
+                    />
+                <ImageButton
+                    android:layout_width="@dimen/twenty_four_dp"
+                    android:layout_height="@dimen/twenty_four_dp"
+                    android:layout_marginTop="19dp"
+                    android:layout_marginEnd="12dp"
+                    android:backgroundTint="@color/white"
+                    android:src="@drawable/comm"
+
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="@dimen/twenty_one_dp"
+                    android:layout_marginBottom="@dimen/twenty_one_dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="@string/support"
+                    android:textColor="@color/black_text"
+                    android:textSize="16sp" />
+                <ImageButton
+                    android:layout_width="@dimen/twenty_four_dp"
+                    android:layout_height="@dimen/twenty_four_dp"
+                    android:layout_marginTop="19dp"
+                    android:layout_marginEnd="12dp"
+                    android:backgroundTint="@color/white"
+                    android:src="@drawable/tell"
+
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="@dimen/twenty_one_dp"
+                    android:layout_marginBottom="@dimen/twenty_one_dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="@string/agreement"
+                    android:textColor="@color/black_text"
+                    android:textSize="16sp" />
+                <ImageButton
+                    android:layout_width="@dimen/twenty_four_dp"
+                    android:layout_height="@dimen/twenty_four_dp"
+                    android:layout_marginTop="19dp"
+                    android:layout_marginEnd="12dp"
+                    android:backgroundTint="@color/white"
+                    android:src="@drawable/go"
+
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
