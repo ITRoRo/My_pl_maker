@@ -3,4 +3,7 @@
 
     <dimen name="twenty_four_dp">24dp</dimen>
     <dimen name="twenty_one_dp">21dp</dimen>
+    <dimen name="sixteen_dp">16dp</dimen>
+    <dimen name="sixteen_sp">16sp</dimen>
+
 </resources>
