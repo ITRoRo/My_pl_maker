@@ -14,10 +14,8 @@
     <color name="switch_thumb_inactive_color">#AEAFB4</color>
     <color name="switch_track_active_color">#9FBBF3</color>
     <color name="switch_track_inactive_color">#E6E8EB</color>
-    <color name="search_string">#E6E8EB</color>
-    <color name="search_text">#AEAFB4</color>
-    <color name="color_search_16">#AEAFB4</color>
-    <color name="color_search_text">#AEAFB4</color>
-    <color name="black_white">#1A1B22</color>
-    <color name="color_beg_search">#E6E8EB</color>
+    <color name="color_search_16">#1A1B22</color>
+    <color name="color_search_text">#1A1B22</color>
+    <color name="color_beg_search">@color/white</color>
+    <color name="black_white">@color/white</color>
 </resources>
