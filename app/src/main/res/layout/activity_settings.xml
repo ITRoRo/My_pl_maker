@@ -4,10 +4,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical"
+    style="@style/LinearLayout"
+
     tools:context=".SettingsActivity">
 
     <LinearLayout
@@ -21,8 +19,9 @@
             android:layout_height="@dimen/twenty_four_dp"
             android:layout_marginStart="@dimen/sixteen_dp"
             android:layout_marginTop="@dimen/sixteen_dp"
-            android:backgroundTint="@color/white"
-            android:src="@drawable/back" />
+            android:backgroundTint="@android:color/transparent"
+            android:src="@drawable/back"
+            />
 
         <TextView
 
@@ -30,21 +29,26 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:layout_marginTop="14dp"
+            android:fontFamily="@font/ys_display_medium"
             android:gravity="center_vertical"
             android:paddingBottom="@dimen/sixteen_dp"
             android:text="@string/nas"
-            android:textColor="@color/black_text"
-            android:textSize="22sp" />
+            android:textColor="?attr/colorOnSecondary"
+            android:textFontWeight="500"
+            android:textSize="22sp"
+            android:theme="@style/Theme.MyPlMaker"
+
+            />
 
     </LinearLayout>
 
     <Switch
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/twenty_four_dp"
         android:checked="false"
         android:gravity="center_vertical"
-
         android:paddingHorizontal="@dimen/sixteen_dp"
         android:paddingVertical="20dp"
         android:switchMinWidth="56dp"
@@ -55,36 +59,27 @@
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/ButtonStyleSetting"
+        android:id="@+id/share"
         android:drawableEnd="@drawable/comm"
-        android:paddingHorizontal="@dimen/sixteen_dp"
-        android:paddingVertical="20dp"
         android:text="@string/share"
-        android:textColor="@color/black_text"
-        android:textSize="16sp"
+
 
         />
 
     <com.google.android.material.textview.MaterialTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/ButtonStyleSetting"
+        android:id="@+id/support"
         android:drawableEnd="@drawable/tell"
-        android:paddingHorizontal="@dimen/sixteen_dp"
-        android:paddingVertical="20dp"
         android:text="@string/support"
-        android:textColor="@color/black_text"
-        android:textSize="16sp" />
+        />
 
     <com.google.android.material.textview.MaterialTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/ButtonStyleSetting"
+        android:id="@+id/consent"
         android:drawableEnd="@drawable/go"
-        android:paddingHorizontal="@dimen/sixteen_dp"
-        android:paddingVertical="20dp"
         android:text="@string/agreement"
-        android:textColor="@color/black_text"
-        android:textSize="16sp" />
+        />
 
 
 </LinearLayout>
