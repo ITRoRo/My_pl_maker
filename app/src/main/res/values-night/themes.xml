@@ -1,24 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.MyPlMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/black_text</item>
-        <item name="colorPrimaryVariant">@color/black_text</item>
-        <item name="colorOnPrimary">@color/black_text</item>
-
-        <item name="android:tint">@color/white</item>
-
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/black_text</item>
-        <item name="colorSecondaryVariant">@color/black_text</item>
-        <item name="colorOnSecondary">@color/white</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-    </style>
-
-    <style name="Theme.IconMyPlMaker" parent="Theme.MyPlMaker">
-        <item name="android:tint">@color/white</item>
-        <item name="android:backgroundTint">@android:color/transparent</item>
+    <style name="Base.Theme.MyPlMaker" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
 </resources>
