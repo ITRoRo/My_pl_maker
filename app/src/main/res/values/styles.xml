@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="ButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton" >
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="ButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_marginBottom">@dimen/sixteen_dp</item>
@@ -17,7 +18,8 @@
         <item name="android:textFontWeight">500</item>
         <item name="android:textAllCaps">false</item>
     </style>
-    <style name="ButtonStyleSetting" >
+
+    <style name="ButtonStyleSetting">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingHorizontal">@dimen/sixteen_dp</item>
@@ -29,8 +31,9 @@
         <item name="android:tint">@color/gray_text</item>
         <item name="android:backgroundTint">@android:color/transparent</item>
         <item name="android:theme">@style/Theme.IconMyPlMaker</item>
-        
+
     </style>
+
     <style name="Icon" parent="ButtonStyleSetting">
         <item name="android:theme">@style/Theme.IconMyPlMaker</item>
 
@@ -41,12 +44,22 @@
         android:orientation="vertical"
     </style>
 
-    <style name="LinearLayout" >
+    <style name="LinearLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
         <item name="android:background">@color/white</item>
 
     </style>
+
+    <style name="Textt">
+        <item name="android:textFontWeight">500</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+
+    </style>
+
+
 </resources>
 
