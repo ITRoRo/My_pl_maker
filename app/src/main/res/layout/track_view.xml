@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_B22_FF"
+    android:orientation="horizontal"
+    android:padding="@dimen/eight_dp"
+    tools:ignore="ExtraText">
+
+    <LinearLayout
+
+        android:id="@+id/item_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
+
+        <ImageView
+            android:id="@+id/trackAva"
+            android:layout_width="@dimen/forty_five_dp"
+            android:layout_height="@dimen/forty_five_dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/four_dp"
+            tools:ignore="ContentDescription"
+
+             />
+
+        <LinearLayout
+            android:id="@+id/texts"
+            android:layout_width="@dimen/zero_dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/eight_dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/trackAva"
+            tools:ignore="InefficientWeight">
+
+            <TextView
+                android:id="@+id/trackName"
+                style="@style/TextTrackView"
+                android:layout_marginStart="@dimen/eight_dp"
+                android:layout_marginTop="@dimen/eight_dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/color_00_FF"
+                android:textSize="@dimen/sixteen_sp"
+                tools:text="@string/share_message" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/eight_dp"
+                android:layout_marginBottom="@dimen/eight_dp"
+                android:maxLines="1"
+                android:orientation="horizontal"
+
+                >
+
+                <TextView
+                    android:id="@+id/musicianName"
+                    style="@style/TextTrackView"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    tools:text="@string/media" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:src="@drawable/ellipse_1"
+                    tools:ignore="ContentDescription"
+
+                    />
+
+                <TextView
+                    android:id="@+id/trackTime"
+                    style="@style/TextTrackView"
+                    android:maxLines="1"
+                    tools:text="@string/media" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/moreImageViewButton"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/four_dp"
+            android:src="@drawable/more"
+            tools:ignore="ContentDescription" />
+    </LinearLayout>
+</LinearLayout>
+
+

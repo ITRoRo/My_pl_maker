@@ -33,10 +33,10 @@
             android:gravity="center_vertical"
             android:paddingBottom="@dimen/sixteen_dp"
             android:text="@string/search_name"
-            android:textColor="?attr/colorOnSecondary"
+            android:textColor="@color/black_white"
             android:textFontWeight="500"
             android:textSize="22sp"
-            android:theme="@style/Theme.MyPlMaker"
+
 
             />
 
@@ -84,4 +84,11 @@
 
 
     </FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recicleView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="@dimen/twelve_dp"
+        android:layout_marginVertical="@dimen/sixteen_dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 </LinearLayout>

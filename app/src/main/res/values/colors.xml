@@ -21,6 +21,8 @@
     <color name="black_white">#1A1B22</color>
     <color name="color_beg_search">#E6E8EB</color>
     <color name="color_blue_input">#3772E7</color>
-
-
+    <color name="color_point">#AEAFB4</color>
+    <color name="color_B22_FF">#FFFFFF</color>
+    <color name="color_00_FF">#000000</color>
+    <color name="color_B4_FF">#AEAFB4</color>
 </resources>
