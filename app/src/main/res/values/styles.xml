@@ -60,6 +60,16 @@
 
     </style>
 
+    <style name="TextTrackView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/color_B4_FF</item>
+        <item name="android:textSize">@dimen/twelve_dp</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:fontFamily">@font/ys_text_regular</item>
+
+    </style>
+
 
 </resources>
 

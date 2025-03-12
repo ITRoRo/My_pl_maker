@@ -18,4 +18,8 @@
     <color name="color_search_text">#1A1B22</color>
     <color name="color_beg_search">@color/white</color>
     <color name="black_white">@color/white</color>
+    <color name="color_point">#FFFFFF</color>
+    <color name="color_B22_FF">#1A1B22</color>
+    <color name="color_00_FF">#FFFFFF</color>
+    <color name="color_B4_FF">#FFFFFF</color>
 </resources>
