@@ -76,4 +76,5 @@ class SearchActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         textSearch = savedInstanceState.getString(PRODUCT_AMOUNT, AMOUNT_DEF)
     }
+
 }

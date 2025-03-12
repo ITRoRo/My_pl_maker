@@ -21,7 +21,8 @@
             android:layout_marginTop="@dimen/sixteen_dp"
             android:backgroundTint="@android:color/transparent"
             android:src="@drawable/back"
-            />
+            app:tint="@color/black_white"
+            tools:ignore="ContentDescription" />
 
         <TextView
 
@@ -59,8 +60,8 @@
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <com.google.android.material.textview.MaterialTextView
-        style="@style/ButtonStyleSetting"
         android:id="@+id/share"
+        style="@style/ButtonStyleSetting"
         android:drawableEnd="@drawable/comm"
         android:text="@string/share"
 
@@ -68,18 +69,16 @@
         />
 
     <com.google.android.material.textview.MaterialTextView
-        style="@style/ButtonStyleSetting"
         android:id="@+id/support"
+        style="@style/ButtonStyleSetting"
         android:drawableEnd="@drawable/tell"
-        android:text="@string/support"
-        />
+        android:text="@string/support" />
 
     <com.google.android.material.textview.MaterialTextView
-        style="@style/ButtonStyleSetting"
         android:id="@+id/consent"
+        style="@style/ButtonStyleSetting"
         android:drawableEnd="@drawable/go"
-        android:text="@string/agreement"
-        />
+        android:text="@string/agreement" />
 
 
 </LinearLayout>

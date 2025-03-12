@@ -6,6 +6,7 @@
 
     tools:context=".SearchActivity">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,13 +20,14 @@
             android:layout_marginTop="@dimen/sixteen_dp"
             android:backgroundTint="@android:color/transparent"
             android:src="@drawable/back"
+            app:tint="@color/black_white"
             tools:ignore="ContentDescription" />
 
         <TextView
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="25dp"
             android:layout_marginTop="14dp"
             android:fontFamily="@font/ys_display_medium"
             android:gravity="center_vertical"
@@ -39,31 +41,35 @@
             />
 
     </LinearLayout>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="@dimen/sixteen_dp"
-        android:paddingVertical="8dp"
-        >
+        android:paddingVertical="8dp">
 
         <EditText
             android:id="@+id/input_text"
-            android:background="@drawable/beck"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawablePadding="8dp"
+            android:background="@drawable/beck"
             android:drawableStart="@drawable/search_16"
+            android:drawablePadding="8dp"
             android:fontFamily="@font/ys_display_regular"
-            android:textFontWeight="400"
             android:hint="@string/search_name"
+            android:inputType="text"
             android:maxLength="100"
             android:maxLines="1"
             android:padding="8.5dp"
             android:paddingStart="12dp"
-            android:inputType="text"
             android:textColorHint="@color/color_search_text"
+            android:textCursorDrawable="@drawable/cursor"
+            android:textFontWeight="400"
             android:textSize="@dimen/sixteen_sp"
-            tools:ignore="Autofill,RtlSymmetry" />
+            tools:ignore="Autofill,RtlSymmetry"
+
+
+            />
 
         <ImageView
             android:id="@+id/clear"
