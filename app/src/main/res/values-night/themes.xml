@@ -6,7 +6,7 @@
         <item name="colorPrimaryVariant">@color/black_text</item>
         <item name="colorOnPrimary">@color/black_text</item>
 
-        <item name="android:tint">@color/white</item>
+
 
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/black_text</item>
