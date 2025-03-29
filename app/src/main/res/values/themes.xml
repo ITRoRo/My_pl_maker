@@ -6,7 +6,7 @@
         <item name="colorPrimaryVariant">@color/blue</item>
         <item name="colorOnPrimary">@color/blue</item>
 
-        <item name="android:tint">@color/gray_text</item>
+
 
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/gray_text</item>
@@ -20,5 +20,14 @@
     <style name="Theme.IconMyPlMaker" parent="Theme.MyPlMaker">
         <item name="android:tint">@color/gray_text</item>
         <item name="android:backgroundTint">@android:color/transparent</item>
+    </style>
+
+    <style name="TrackShortInfoText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:fontWeight">400</item>
+        <item name="android:textColor">@color/gray_text</item>
+        <item name="android:textSize">@dimen/eight_dp</item>
     </style>
 </resources>
