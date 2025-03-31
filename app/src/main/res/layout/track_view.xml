@@ -23,7 +23,7 @@
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/four_dp"
             tools:ignore="ContentDescription"
-
+            android:scaleType="centerCrop"
              />
 
         <LinearLayout

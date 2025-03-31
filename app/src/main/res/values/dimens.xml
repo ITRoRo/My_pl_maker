@@ -4,7 +4,6 @@
     <dimen name="twenty_four_dp">24dp</dimen>
     <dimen name="twenty_one_dp">21dp</dimen>
     <dimen name="sixteen_dp">16dp</dimen>
-    <dimen name="sixteen_sp">16sp</dimen>
     <dimen name="twelve_dp">12dp</dimen>
     <dimen name="eight_dp">8dp</dimen>
     <dimen name="ten_dp">10dp</dimen>
@@ -14,4 +13,10 @@
     <dimen name="zero_dp">0dp</dimen>
     <dimen name="six_dp">6dp</dimen>
     <dimen name="forty_five_dp">45dp</dimen>
+
+
+    <dimen name="sixteen_sp">16sp</dimen>
+    <dimen name="nineteen_sp">19sp</dimen>
+    <dimen name="fourteen_sp">14sp</dimen>
+
 </resources>
