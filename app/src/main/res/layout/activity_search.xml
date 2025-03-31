@@ -62,6 +62,7 @@
             android:maxLines="1"
             android:padding="8.5dp"
             android:paddingStart="12dp"
+            android:textColor="@color/black_text"
             android:textColorHint="@color/color_search_text"
             android:textCursorDrawable="@drawable/cursor"
             android:textFontWeight="400"

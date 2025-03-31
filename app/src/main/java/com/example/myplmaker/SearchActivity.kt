@@ -168,7 +168,7 @@ class SearchActivity : AppCompatActivity() {
             trackListAd.clear()
             trackAdapter.notifyDataSetChanged()
             inputEditText.setText("")
-            inputMethodManager?.hideSoftInputFromWindow(clearButton.windowToken, 0)
+            inputMethodManager.hideSoftInputFromWindow(clearButton.windowToken, 0)
             inputEditText.clearFocus()
         }
         inputEditText.setText(textSearch)
@@ -180,10 +180,10 @@ class SearchActivity : AppCompatActivity() {
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
         return if (s.isNullOrEmpty()) {
-            View.VISIBLE
+            View.GONE
         } else {
 
-            View.GONE
+            View.VISIBLE
         }
     }
 
