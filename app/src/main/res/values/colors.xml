@@ -26,4 +26,9 @@
     <color name="color_00_FF">#000000</color>
     <color name="color_B4_FF">#AEAFB4</color>
     <color name="color_FF_B22">#1A1B22</color>
+    <color name="color_sw_w">#AEAFB4</color>
+    <color name="color_sw_b">#3772E7</color>
+    <color name="color_tr_w">#E6E8EB</color>
+    <color name="color_tr_b">#9FBBF3</color>
+
 </resources>

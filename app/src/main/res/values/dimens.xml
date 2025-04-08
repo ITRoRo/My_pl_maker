@@ -13,10 +13,12 @@
     <dimen name="zero_dp">0dp</dimen>
     <dimen name="six_dp">6dp</dimen>
     <dimen name="forty_five_dp">45dp</dimen>
+    <dimen name="thirty_six_dp">36dp</dimen>
+    <dimen name="radius_54">54dp</dimen>
 
 
     <dimen name="sixteen_sp">16sp</dimen>
     <dimen name="nineteen_sp">19sp</dimen>
     <dimen name="fourteen_sp">14sp</dimen>
-
+    <dimen name="twenty_two_sp">22sp</dimen>
 </resources>
