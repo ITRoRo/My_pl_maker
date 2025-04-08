@@ -62,11 +62,14 @@
             android:maxLines="1"
             android:padding="8.5dp"
             android:paddingStart="12dp"
+            android:textColor="@color/black_text"
             android:textColorHint="@color/color_search_text"
             android:textCursorDrawable="@drawable/cursor"
             android:textFontWeight="400"
             android:textSize="@dimen/sixteen_sp"
             tools:ignore="Autofill,RtlSymmetry"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
 
 
             />
@@ -84,6 +87,49 @@
 
 
     </FrameLayout>
+
+    <LinearLayout android:id="@+id/title_error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView android:id="@+id/image_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            />
+
+
+        <TextView android:id="@+id/text_error"
+            style="@style/TextNoInternet" />
+
+        <TextView android:id="@+id/text_error_internet"
+            android:visibility="gone"
+            style="@style/TextNoInternet" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/update_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/twenty_four_dp"
+            android:fontFamily="@font/ys_display_medium"
+            android:backgroundTint="@color/color_00_FF"
+            android:textColor="@color/color_B22_FF"
+            android:textAllCaps="false"
+            android:visibility="gone"
+            android:textSize="@dimen/fourteen_sp"
+            app:cornerRadius="@dimen/sixteen_dp"
+            />
+
+
+
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recicleView"
         android:layout_width="match_parent"
