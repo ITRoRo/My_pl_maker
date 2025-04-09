@@ -30,7 +30,7 @@ class SearchActivity : AppCompatActivity() {
         const val MAX_TRACKS = 10
     }
 
-
+    private lateinit var searchHistory: SearchHistory
     val trackListAd = ArrayList<Track>()
     val showStatus = ShowStatus()
     var historyTracks = ArrayList<Track>(MAX_TRACKS)
@@ -55,17 +55,26 @@ class SearchActivity : AppCompatActivity() {
         val clearButton = findViewById<ImageView>(R.id.clear)
         val inputEditText = findViewById<EditText>(R.id.input_text)
         val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+
         val trackAdapter = TrackAdapter(trackListAd)
         val searchAdapter = findViewById<RecyclerView>(R.id.recicleView)
-
         val historyAdapter = TrackAdapter(historyTracks)
-        searchAdapter.layoutManager = LinearLayoutManager(this)
+
+      // searchAdapter.layoutManager = LinearLayoutManager(this)
         searchAdapter.adapter = trackAdapter
         showStatus.reciclerViewHistoryTrack = findViewById(R.id.view_history)
+
+
         searchClass.fromJson(historyTracks)
 
 
         trackAdapter.onItemClick = { trackItem ->
+            inputEditText.clearFocus()
+            searchClass.addTrackInHistory(historyTracks, trackItem)
+            historyAdapter.notifyDataSetChanged()
+
+        }
+        historyAdapter.onItemClick = { trackItem ->
             inputEditText.clearFocus()
             searchClass.addTrackInHistory(historyTracks, trackItem)
             historyAdapter.notifyDataSetChanged()
@@ -107,18 +116,20 @@ class SearchActivity : AppCompatActivity() {
 
 
 
-                if (s.isNullOrEmpty()) {
-                    View.GONE
-                    showStatus.showStatus(Konst.ZAG)
+                if (!s.isNullOrEmpty()) {
 
-                    if (inputEditText.hasFocus() && historyTracks.isNotEmpty()) {
+                    View.VISIBLE
+                    showStatus.showStatus(Konst.ZAG)
+                }
+                else  {
+                    if(inputEditText.hasFocus() && historyTracks.isNotEmpty()) {
                         showStatus.reciclerViewHistoryTrack.adapter = historyAdapter
                         historyAdapter.notifyDataSetChanged()
                         showStatus.showStatus(Konst.HISTORY)
                     }
-                } else {
+
                     showStatus.showStatus(Konst.ZAG)
-                    View.VISIBLE
+                    View.GONE
                 }
 
 
@@ -176,7 +187,7 @@ class SearchActivity : AppCompatActivity() {
             false
         }
 
-        
+
         clearButton.setOnClickListener {
             trackListAd.clear()
             trackAdapter.notifyDataSetChanged()

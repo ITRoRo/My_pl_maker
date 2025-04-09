@@ -29,12 +29,13 @@ class SearchHistory {
         if (historyTracks.contains(trackItem)) {
             historyTracks.remove(trackItem)
         }
+        historyTracks.add(0, trackItem)
         if (historyTracks.size > 10) {
             historyTracks.removeLast()
         }
-        historyTracks.add(0, trackItem)
+
         val json = gson.toJson(historyTracks)
-        sharedPreferences.edit().putString("HISTORY_KEY", json).apply()
+        sharedPreferences.edit().putString(HISTORY_KEY, json).apply()
     }
 
     fun clearHistory(historyTracks: ArrayList<Track>) {
