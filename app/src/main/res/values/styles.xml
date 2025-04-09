@@ -38,17 +38,14 @@
         <item name="android:theme">@style/Theme.IconMyPlMaker</item>
 
 
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        android:orientation="vertical"
     </style>
 
-    <style name="LinearLayout">
+    <style name="LinearLayout" >
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
         <item name="android:background">@color/white</item>
+
 
     </style>
 

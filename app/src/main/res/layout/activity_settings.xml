@@ -43,21 +43,21 @@
 
     </LinearLayout>
 
-    <Switch
-
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/themeSwitcher"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/twenty_four_dp"
-        android:checked="false"
+
         android:gravity="center_vertical"
         android:paddingHorizontal="@dimen/sixteen_dp"
         android:paddingVertical="20dp"
-        android:switchMinWidth="56dp"
         android:text="@string/black_tm"
         android:textSize="16sp"
-        android:thumbTint="@color/switch_thumb_color"
-        android:trackTint="@color/switch_track_color"
-        tools:ignore="UseSwitchCompatOrMaterialXml" />
+        app:thumbTint="@color/switch_thumb_color"
+        app:trackTint="@color/switch_track_color"
+        tools:ignore="UseSwitchCompatOrMaterialXml"
+        />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/share"

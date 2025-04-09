@@ -30,4 +30,5 @@
         <item name="android:textColor">@color/gray_text</item>
         <item name="android:textSize">@dimen/eight_dp</item>
     </style>
+
 </resources>

@@ -16,6 +16,11 @@
         android:layout_height="match_parent"
         tools:ignore="UselessParent">
 
+        <TextView android:id="@+id/track_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
         <ImageView
             android:id="@+id/trackAva"
             android:layout_width="@dimen/forty_five_dp"
