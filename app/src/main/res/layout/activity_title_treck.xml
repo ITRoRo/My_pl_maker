@@ -262,5 +262,4 @@
             app:layout_constraintEnd_toEndOf="@id/right_guidline"
             tools:ignore="VisualLintBounds" />
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
