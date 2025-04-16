@@ -1,9 +1,11 @@
 package com.example.myplmaker
 
+import android.content.Context
 import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.util.TypedValueCompat.dpToPx
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -11,34 +13,57 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 
-class TrackHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
+class TrackHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val trackName: TextView = itemView.findViewById(R.id.trackName)
     private val artistName: TextView = itemView.findViewById(R.id.musicianName)
-    private val artwor : ImageView = itemView.findViewById(R.id.trackAva)
-    private val trackTime : TextView = itemView.findViewById(R.id.trackTime)
+    private val artwor: ImageView = itemView.findViewById(R.id.trackAva)
+    private val trackTime: TextView = itemView.findViewById(R.id.trackTime)
+    private val trackId: TextView = itemView.findViewById(R.id.track_id)
+
+
+    private val placeholder = R.drawable.placeholder
 
     fun bind(model: Track) {
+        trackId.text = model.trackId.toString()
         trackName.text = model.trackName
         artistName.text = model.artistName
-        trackTime.text = SimpleDateFormat(
-            "mm:ss",
-            Locale.getDefault())
-            .format(model.trackTimeMillis.toInt())
+        trackTime.text =
+            SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis)
 
+        val trackImage = model.artworkUrl100
+        val context = itemView.context
+        setImage(context, trackImage, artwor, placeholder, 2.0f)
+
+
+        //отработка нажатия
+        itemView.setOnClickListener {
+            addTrack(model)
+        }
+    }
+
+    private fun setImage(
+        itemView: Context,
+        trackImage: String?,
+        artwor: ImageView,
+        placeholder: Int,
+        dp: Float
+    ) {
         Glide.with(itemView)
-            .load(model.artworkUrl100)
-            .centerCrop()
-            .placeholder(R.drawable.placeholder)
-            .transform(RoundedCorners(dpToPx(2.0f, itemView)))
+            .load(trackImage)
+            .placeholder(placeholder)
+            .transform(RoundedCorners(dpToPx(itemView, dp)))
             .into(artwor)
     }
 
-    private fun dpToPx(dp: Float, context: View): Int {
-
+    private fun dpToPx(context: Context, dp: Float): Int {
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             dp,
             context.resources.displayMetrics
         ).toInt()
+    }
+
+    private fun addTrack(model: Track): Track {
+        return model
     }
 }

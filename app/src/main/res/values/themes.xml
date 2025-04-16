@@ -30,4 +30,12 @@
         <item name="android:textColor">@color/gray_text</item>
         <item name="android:textSize">@dimen/eight_dp</item>
     </style>
+    <style name="Base.Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/color_B22_FF</item>
+    </style>
+    <style name="Theme.TextPlaylistMaker" parent="Base.Theme.PlaylistMaker">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:tint">@color/black</item>
+    </style>
+
 </resources>

@@ -13,10 +13,23 @@
     <dimen name="zero_dp">0dp</dimen>
     <dimen name="six_dp">6dp</dimen>
     <dimen name="forty_five_dp">45dp</dimen>
+    <dimen name="thirty_six_dp">36dp</dimen>
+    <dimen name="thirty_six_36dp">36dp</dimen>
+    <dimen name="radius_54">54dp</dimen>
+    <dimen name="fortyn_40dp">40dp</dimen>
+    <dimen name="for48">48dp</dimen>
+    <dimen name="fifty_six_56dp">56dp</dimen>
+    <dimen name="sixtyn_60dp">60dp</dimen>
+    <dimen name="eighty_four_84dp">84dp</dimen>
+    <dimen name="twenty_eight_28dp">28dp</dimen>
+
 
 
     <dimen name="sixteen_sp">16sp</dimen>
     <dimen name="nineteen_sp">19sp</dimen>
     <dimen name="fourteen_sp">14sp</dimen>
+    <dimen name="twenty_two_sp">22sp</dimen>
+    <dimen name="twelve_sp">12sp</dimen>
+
 
 </resources>

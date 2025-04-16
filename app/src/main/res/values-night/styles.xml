@@ -41,7 +41,6 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
         <item name="android:background">@color/black_text</item>
-
     </style>
 
     <style name="TextNoInternet">

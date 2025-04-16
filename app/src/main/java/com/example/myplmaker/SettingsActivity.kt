@@ -1,21 +1,31 @@
 package com.example.myplmaker
 
-import android.app.Notification.EXTRA_TEXT
 import android.content.Intent
-import android.content.Intent.EXTRA_SUBJECT
 import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageButton
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.RecyclerView
+
+import com.google.android.material.switchmaterial.SwitchMaterial
+
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
+
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+        val sharedPreferences = getSharedPreferences(App.SETTING_KEY, MODE_PRIVATE)
+        themeSwitcher.isChecked = sharedPreferences.getBoolean(App.THEM_KEY, false)
+
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
+            sharedPreferences.edit()
+                .putBoolean(App.THEM_KEY, checked)
+                .apply()
+        }
+
 
         val back = findViewById<ImageButton>(R.id.back)
         back.setOnClickListener { finish() }
