@@ -1,6 +1,7 @@
 package com.example.myplmaker
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -30,20 +31,18 @@ class SearchActivity : AppCompatActivity() {
         const val MAX_TRACKS = 10
     }
 
-    private lateinit var searchHistory: SearchHistory
-    val trackListAd = ArrayList<Track>()
-    val showStatus = ShowStatus()
-    var historyTracks = ArrayList<Track>(MAX_TRACKS)
-    private val searchClass = SearchHistory()
+    private val trackListAd = ArrayList<Track>()
+    private val showStatus = ShowStatus()
+    private var historyTracks = ArrayList<Track>(MAX_TRACKS)
 
+    private val searchHistory = SearchHistory()
 
-    @SuppressLint("MissingInflatedId")
     private val itunesBaseUrl = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
         .baseUrl(itunesBaseUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-    private val itunesService = retrofit.create(ITunesApi::class.java)
+    val itunesService: ITunesApi? = retrofit.create(ITunesApi::class.java)
 
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -60,26 +59,39 @@ class SearchActivity : AppCompatActivity() {
         val searchAdapter = findViewById<RecyclerView>(R.id.recicleView)
         val historyAdapter = TrackAdapter(historyTracks)
 
-      // searchAdapter.layoutManager = LinearLayoutManager(this)
+        // Установка адаптера для рециклерного представления
         searchAdapter.adapter = trackAdapter
         showStatus.reciclerViewHistoryTrack = findViewById(R.id.view_history)
 
+        searchHistory.fromJson(historyTracks)
 
-        searchClass.fromJson(historyTracks)
-
-
-        trackAdapter.onItemClick = { trackItem ->
+        // Обработчик кликов для треков
+        trackAdapter.onItemClick = { trackItem: Track ->
             inputEditText.clearFocus()
-            searchClass.addTrackInHistory(historyTracks, trackItem)
+            searchHistory.addTrackInHistory(historyTracks, trackItem)
+            startActivity(Intent(this, TitleActivity::class.java).apply {
+                putExtra("trackObject", trackItem)
+            })
             historyAdapter.notifyDataSetChanged()
-
         }
-        historyAdapter.onItemClick = { trackItem ->
-            inputEditText.clearFocus()
-            searchClass.addTrackInHistory(historyTracks, trackItem)
-            historyAdapter.notifyDataSetChanged()
 
+
+        historyAdapter.onItemClick = { trackItem: Track ->
+            startActivity(Intent(this, TitleActivity::class.java).apply {
+                putExtra("trackObject", trackItem)
+            })
         }
+
+        inputEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus && historyTracks.isNotEmpty()) {
+                trackListAd.clear()
+                showStatus.reciclerViewHistoryTrack.adapter = historyAdapter
+                historyAdapter.notifyDataSetChanged()
+                showStatus.showStatus(Konst.HISTORY)
+            }
+        }
+
+
 
         showStatus.titleError = findViewById(R.id.title_error)
         showStatus.imageError = findViewById(R.id.image_error)
@@ -89,15 +101,6 @@ class SearchActivity : AppCompatActivity() {
         showStatus.historyBlock = findViewById(R.id.history)
         showStatus.historyText = findViewById(R.id.history_icon)
         showStatus.historyButton = findViewById(R.id.clear_history)
-        
-        inputEditText.setOnFocusChangeListener { _, _ ->
-            if (inputEditText.hasFocus() && historyTracks.isNotEmpty()) {
-                showStatus.reciclerViewHistoryTrack.adapter = historyAdapter
-                historyAdapter.notifyDataSetChanged()
-                showStatus.showStatus(Konst.HISTORY)
-
-            }
-        }
 
 
         val backButton = findViewById<ImageButton>(R.id.back)
@@ -120,9 +123,9 @@ class SearchActivity : AppCompatActivity() {
 
                     View.VISIBLE
                     showStatus.showStatus(Konst.ZAG)
-                }
-                else  {
-                    if(inputEditText.hasFocus() && historyTracks.isNotEmpty()) {
+                } else {
+                    if (inputEditText.hasFocus() && historyTracks.isNotEmpty()) {
+                        trackListAd.clear()
                         showStatus.reciclerViewHistoryTrack.adapter = historyAdapter
                         historyAdapter.notifyDataSetChanged()
                         showStatus.showStatus(Konst.HISTORY)
@@ -149,15 +152,18 @@ class SearchActivity : AppCompatActivity() {
             trackListAd.clear()
             showStatus.titleError.isVisible = false
 
-            itunesService.search(inputEditText.text.toString())
-                .enqueue(object : Callback<TrackResponse> {
+            itunesService?.search(inputEditText.text.toString())
+                ?.enqueue(object : Callback<TrackResponse> {
 
                     override fun onResponse(
                         call: Call<TrackResponse>,
                         response: Response<TrackResponse>
                     ) {
                         if (response.code() == 200) {
-                            trackListAd.clear()
+                            val results = response.body()?.results
+                            if (results != null) {
+                                trackListAd.addAll(results)
+                            }
                             trackListAd.addAll(response.body()?.results!!)
                             trackAdapter.notifyDataSetChanged()
 
@@ -201,7 +207,7 @@ class SearchActivity : AppCompatActivity() {
 
         }
         showStatus.historyButton.setOnClickListener {
-            searchClass.clearHistory(historyTracks)
+            searchHistory.clearHistory(historyTracks)
             historyAdapter.notifyDataSetChanged()
             showStatus.showStatus(Konst.ZAG)
         }

@@ -1,13 +1,13 @@
 package com.example.myplmaker
+
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 
 
-
-
 class App : Application() {
     companion object {
+        @Volatile
         lateinit var sharedPreferences: SharedPreferences
         const val SETTING_KEY = "settings"
         const val HISTORY_KEY = "history_key"
@@ -20,7 +20,9 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        sharedPreferences = getSharedPreferences(SHER_PREF_KEY, MODE_PRIVATE)
+        sharedPreferences = synchronized(this) {
+            getSharedPreferences(SHER_PREF_KEY, MODE_PRIVATE)
+        }
 
         darkTheme = sharedPreferences.getBoolean(THEM_KEY, darkTheme)
         switchTheme(darkTheme)
@@ -41,8 +43,12 @@ class App : Application() {
 
 
     fun saveTheme(darkTheme: Boolean) {
-        sharedPreferences.edit()
-            .putBoolean(THEM_KEY, darkTheme)
-            .apply()
+        synchronized(this) {
+            sharedPreferences.edit()
+                .putBoolean(THEM_KEY, darkTheme)
+                .putBoolean(THEM_KEY, darkTheme)
+                .apply()
+
+        }
     }
 }
