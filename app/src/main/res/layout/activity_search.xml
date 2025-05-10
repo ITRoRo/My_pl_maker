@@ -88,6 +88,14 @@
 
     </FrameLayout>
 
+    <ProgressBar android:id="@+id/progressBar"
+        android:layout_width="@dimen/forty_for_44dp"
+        android:layout_height="@dimen/forty_for_44dp"
+        android:layout_marginTop="@dimen/hundred120dp"
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/blue"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:id="@+id/title_error"
         android:layout_width="match_parent"
