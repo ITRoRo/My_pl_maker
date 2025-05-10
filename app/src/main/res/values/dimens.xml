@@ -22,7 +22,8 @@
     <dimen name="sixtyn_60dp">60dp</dimen>
     <dimen name="eighty_four_84dp">84dp</dimen>
     <dimen name="twenty_eight_28dp">28dp</dimen>
-
+    <dimen name="forty_for_44dp">44dp</dimen>
+    <dimen name="hundred120dp">120dp</dimen>
 
 
     <dimen name="sixteen_sp">16sp</dimen>
