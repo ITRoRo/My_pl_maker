@@ -127,7 +127,7 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 textSearch = s.toString()
                 if (!s.isNullOrEmpty()) {
-                    View.VISIBLE
+                    clearButton.visibility = View.VISIBLE
                     showStatus.showStatus(Konst.ZAG)
 
                     searchDebounce()
@@ -140,7 +140,7 @@ class SearchActivity : AppCompatActivity() {
                         showStatus.showStatus(Konst.HISTORY)
                     }
                     showStatus.showStatus(Konst.ZAG)
-                    View.GONE
+                    clearButton.visibility = View.GONE
                 }
             }
 
@@ -193,7 +193,7 @@ class SearchActivity : AppCompatActivity() {
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                runnable
+                searchDebounce()
 
             }
             false
@@ -211,7 +211,7 @@ class SearchActivity : AppCompatActivity() {
 
         inputEditText.setText(textSearch)
         showStatus.updateButton.setOnClickListener {
-            runnable
+            searchDebounce()
         }
 
 

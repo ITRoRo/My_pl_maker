@@ -83,6 +83,7 @@
             android:importantForAccessibility="no"
             android:padding="12dp"
             android:src="@drawable/clear"
+            android:visibility="gone"
             app:tint="@color/color_search_16" />
 
 
