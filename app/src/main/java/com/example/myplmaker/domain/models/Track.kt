@@ -1,4 +1,4 @@
-/*package com.example.myplmaker
+package com.example.myplmaker.domain.models
 import android.os.Parcel
 import android.os.Parcelable
 
@@ -56,4 +56,4 @@ data class Track(
             return arrayOfNulls(size)
         }
     }
-}*/
+}

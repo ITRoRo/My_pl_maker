@@ -1,10 +1,12 @@
-/*package com.example.myplmaker
+package com.example.myplmaker.ui.setting
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
+import com.example.myplmaker.App
+import com.example.myplmaker.R
 
 import com.google.android.material.switchmaterial.SwitchMaterial
 
@@ -64,4 +66,4 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-}*/
+}

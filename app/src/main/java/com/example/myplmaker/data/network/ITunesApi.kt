@@ -1,4 +1,4 @@
-/*package com.example.myplmaker
+package com.example.myplmaker.data.network
 
 import com.example.myplmaker.data.dto.TrackSearchResponse
 import retrofit2.Call
@@ -8,6 +8,5 @@ import retrofit2.http.Query
 
 interface ITunesApi {
     @GET("/search?entity=song&country=ru")
-    fun search(@Query("term") text: String): Call<TrackSearchResponse>
-    fun searchMovies(expression: Any): Any
-}*/
+    fun searchTracks(@Query("term") text: String): Call<TrackSearchResponse>
+}

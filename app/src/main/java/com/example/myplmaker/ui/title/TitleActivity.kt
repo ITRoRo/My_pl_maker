@@ -1,4 +1,4 @@
-/*package com.example.myplmaker
+package com.example.myplmaker.ui.title
 
 
 import android.annotation.SuppressLint
@@ -19,6 +19,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.myplmaker.R
+import com.example.myplmaker.domain.models.Track
+import java.io.IOException
 //import com.example.myplmaker.TitleActivity.Companion.DELAY
 
 import java.text.ParseException
@@ -40,116 +43,82 @@ class TitleActivity : AppCompatActivity() {
     }
 
     private lateinit var trackItem: Track
-
-
     private var mediaPlayer = MediaPlayer()
     private val handler = Handler(Looper.getMainLooper())
     private var playerState = STATE_DEFAULT
+
     private lateinit var playButton: ImageView
     private lateinit var playTime: TextView
+
     private val statusTime = object : Runnable {
         override fun run() {
             if (playerState == STATE_PLAYING) {
-                playTime.text = SimpleDateFormat(
-                    "mm:ss",
-                    Locale.getDefault()
-                ).format(mediaPlayer.currentPosition)
+                playTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
                 handler.postDelayed(this, CLICK_DEBOUNCE_DELAY)
             }
         }
     }
-
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_title_treck)
 
-
-        val backButton = findViewById<ImageButton>(R.id.back_button)
-        backButton.setOnClickListener {
-            this.finish()
+        // Инициализация кнопки "Назад"
+        findViewById<ImageButton>(R.id.back_button).setOnClickListener {
+            finish()
         }
 
-
-        trackItem = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra("trackObject", Track::class.java)
-        } else {
-            intent.getParcelableExtra("trackObject") as? Track
-        } ?: return
-        runTreck()
+        trackItem = intent.getParcelableExtra("trackObject", Track::class.java) ?: return
+        initializeUI()
+        preparePlayer()
     }
 
-
-    @SuppressLint("RestrictedApi")
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun runTreck() {
-        trackItem.let {
-            findViewById<TextView>(R.id.title_track).text = it.trackName
-            findViewById<TextView>(R.id.artist_name).text = it.artistName
-            findViewById<TextView>(R.id.genre).text = it.primaryGenreName
-            findViewById<TextView>(R.id.country).text = it.country
-            findViewById<TextView>(R.id.timer).text = it.trackTimeMillis.let { it1 ->
-                formatTrackTime(
-                    it1
-                )
-            }
-            findViewById<TextView>(R.id.time).text = it.trackTimeMillis.let { it1 ->
-                formatTrackTime(
-                    it1
-                )
-            }
-        }
+    private fun initializeUI() {
+        // Установка текстов
+        findViewById<TextView>(R.id.title_track).text = trackItem.trackName
+        findViewById<TextView>(R.id.artist_name).text = trackItem.artistName
+        findViewById<TextView>(R.id.genre).text = trackItem.primaryGenreName
+        findViewById<TextView>(R.id.country).text = trackItem.country
+        findViewById<TextView>(R.id.timer).text = formatTrackTime(trackItem.trackTimeMillis)
+        findViewById<TextView>(R.id.time).text = formatTrackTime(trackItem.trackTimeMillis)
 
         playButton = findViewById(R.id.button_play)
-        playTime = findViewById(R.id.timer)
-
-
-        val album = findViewById<TextView>(R.id.album)
-        trackItem.collectionName?.let {
-            album.text = it
-            album.isVisible = true
-        } ?: run {
-            album.isVisible = false
+        playButton.setOnClickListener {
+            playbackControl()
         }
+        playTime = findViewById(R.id.timer)
+        // Установка информации об альбоме и дате
+        setupAlbumInfo()
+        setupReleaseDate()
 
+        // Загрузка изображения альбома
+        setupAlbumImage()
+    }
 
+    private fun setupAlbumInfo() {
+        val albumTextView = findViewById<TextView>(R.id.album)
+        albumTextView.isVisible = trackItem.collectionName != null
+        albumTextView.text = trackItem.collectionName
+    }
+
+    private fun setupReleaseDate() {
         val releaseData = findViewById<TextView>(R.id.year)
+        releaseData.isVisible = trackItem.releaseDate != null
         trackItem.releaseDate?.let {
             val years = formatData(it)
             releaseData.text = years
-            releaseData.isVisible = true
-        } ?: run {
-            releaseData.isVisible = false
         }
+    }
 
-
+    private fun setupAlbumImage() {
         val bigPoster = findViewById<ImageView>(R.id.trackAva)
-        val bigPoster100 = trackItem.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
-        val context = this
-        val cornerRadiusPx = dpToPx(8, context)
+        val bigPosterUrl = trackItem.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
         Glide.with(this)
-            .load(bigPoster100)
+            .load(bigPosterUrl)
             .placeholder(R.drawable.placeholder)
-            .centerCrop()
-            .transform(RoundedCorners(cornerRadiusPx))
             .into(bigPoster)
-
-        preparePlayer()
-        playTime.setOnClickListener {
-            playbackControl()
-        }
-
     }
-
-
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelable("trackObject", trackItem)
-    }
-
-
     private fun formatData(dateString: String): String? {
         return try {
             val originalData =
@@ -167,6 +136,21 @@ class TitleActivity : AppCompatActivity() {
         }
     }
 
+    private fun preparePlayer() {
+        try {
+            mediaPlayer.setDataSource(trackItem.previewUrl)
+            mediaPlayer.prepareAsync()
+            mediaPlayer.setOnPreparedListener {
+                playButton.isEnabled = true
+                playerState = STATE_PREPARED
+            }
+            mediaPlayer.setOnCompletionListener {
+                resetPlayer()
+            }
+        } catch (e: IOException) {
+            e.printStackTrace() // Обработка ошибок
+        }
+    }
 
     private fun dpToPx(dp: Int, context: Context): Int {
         val density = context.resources.displayMetrics.density
@@ -183,20 +167,10 @@ class TitleActivity : AppCompatActivity() {
         )
     }
 
-
-    private fun preparePlayer() {
-
-        mediaPlayer.setDataSource(trackItem.previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playButton.isEnabled = true
-            playerState = STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            playButton.setImageResource(R.drawable.stop)
-            playerState = STATE_PREPARED
-            playTime.text = START_TIME
-        }
+    private fun resetPlayer() {
+        playButton.setImageResource(R.drawable.stop)
+        playerState = STATE_PREPARED
+        playTime.text = START_TIME
     }
 
     private fun startPlayer() {
@@ -222,7 +196,9 @@ class TitleActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         handler.removeCallbacks(statusTime)
-        pausePlayer()
+        if (playerState == STATE_PLAYING) {
+            pausePlayer()
+        }
     }
 
     override fun onDestroy() {
@@ -230,8 +206,7 @@ class TitleActivity : AppCompatActivity() {
         handler.removeCallbacks(statusTime)
         mediaPlayer.release()
     }
-
-}*/
+}
 
 
 

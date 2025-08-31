@@ -1,4 +1,4 @@
-/*package com.example.myplmaker
+package com.example.myplmaker.ui.search
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -19,12 +19,20 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myplmaker.R
+
+
 import com.example.myplmaker.data.network.SearchHistory
+import com.example.myplmaker.domain.models.Track
+import com.example.myplmaker.ui.TrackAdapter
+import com.example.myplmaker.ui.title.TitleActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.myplmaker.Creator
+import com.example.myplmaker.data.dto.TrackSearchResponse
+import com.example.myplmaker.domain.api.TracksInteractor
+
 
 class SearchActivity : AppCompatActivity() {
     companion object {
@@ -45,12 +53,9 @@ class SearchActivity : AppCompatActivity() {
     private val showStatus = ShowStatus()
     private var historyTracks = ArrayList<Track>(MAX_TRACKS)
     private val searchHistory = SearchHistory()
-    private val itunesBaseUrl = "https://itunes.apple.com"
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(itunesBaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-    val itunesService: ITunesApi? = retrofit.create(ITunesApi::class.java)
+
+    private val tracksInteractor = Creator.provideTrackInteractor()
+
 
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -160,37 +165,68 @@ class SearchActivity : AppCompatActivity() {
                 trackListAd.clear()
                 showStatus.titleError.isVisible = false
                 progressBar.visibility = View.VISIBLE
-                itunesService?.search(inputEditText.text.toString())
-                    ?.enqueue(object : Callback<TrackResponse> {
-                        override fun onResponse(
-                            call: Call<TrackResponse>,
-                            response: Response<TrackResponse>
-                        ) {
-                            if (response.code() == 200) {
-                                progressBar.visibility = View.GONE
-                                val results = response.body()?.results
-                                if (results != null) {
-                                    trackListAd.addAll(results)
+                tracksInteractor.searchTracks(inputEditText.text.toString(),
+                    object : TracksInteractor.TracksConsumer {
+                        override fun consumer(foundTracks: List<Track>) {
+                            runOnUiThread {
+                                if (foundTracks.isNotEmpty()) {
+                                    progressBar.visibility = View.GONE
+                                    trackListAd.clear()
+                                    trackListAd.addAll(foundTracks)
+                                    trackAdapter.notifyDataSetChanged()
+                                    if (trackListAd.isEmpty()) {
+                                        showStatus.showStatus(Konst.NO_TRACK)
+                                    }
+                                } else {
+                                    showStatus.showStatus(Konst.NO_INTERNET)
+                                    progressBar.visibility = View.GONE
                                 }
-                                trackListAd.addAll(response.body()?.results!!)
-                                trackAdapter.notifyDataSetChanged()
-                                if (trackListAd.isEmpty()) {
-                                    showStatus.showStatus(Konst.NO_TRACK)
-                                }
-                            } else {
-                                showStatus.showStatus(Konst.NO_INTERNET)
-                                progressBar.visibility = View.GONE
                             }
                         }
 
+                            override fun onFailure(call: Call<TrackSearchResponse>, t: Throwable) {
+                                showStatus.showStatus(Konst.NO_INTERNET)
+                                progressBar.visibility = View.GONE
+                            }
 
-                        override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                            showStatus.showStatus(Konst.NO_INTERNET)
-                            progressBar.visibility = View.GONE
-                        }
                     })
             }
         }
+/*
+        runnable = Runnable {
+            if (inputEditText.text.isNotEmpty()) {
+
+
+                showStatus.showStatus(Konst.ZAG)
+
+                tracksInteractor.searchTracks(
+                    inputEditText.text.toString(),
+                    object : TracksInteractor.TracksConsumer {
+                        @SuppressLint("NotifyDataSetChanged")
+                        override fun consume(recievedTracks: List<Track>) {
+                            runOnUiThread {
+                                if (recievedTracks.isNotEmpty()) {
+                                    trackListAd.clear()
+                                    trackListAd.addAll(recievedTracks)
+                                    showStatus.titleError.isVisible = false
+                                    progressBar.visibility = View.VISIBLE
+                                    trackAdapter.notifyDataSetChanged()
+
+                                } else if (recievedTracks.isEmpty()) {
+                                    showStatus.showStatus(Konst.NO_TRACK)
+                                }
+                            }
+                        }
+
+                        override fun onFailure(call: Call<TrackSearchResponse>, t: Throwable) {
+                            showStatus.showStatus(Konst.NO_INTERNET)
+                            progressBar.visibility = View.GONE
+                        }
+                        }
+                    )
+            }
+        }
+*/
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -249,4 +285,4 @@ class SearchActivity : AppCompatActivity() {
         handler.postDelayed(runnable, CLICK_DEBOUNCE_DELAY)
     }
 
-}*/
+}
