@@ -7,11 +7,11 @@ import com.example.myplmaker.domain.api.TracksRepository
 import com.example.myplmaker.domain.impl.TracksInteractorImpl
 
 object Creator {
-    private fun getMoviesRepository(): TracksRepository {
+    private fun getTracksRepository(): TracksRepository {
         return TracksRepositoryImpl(RetrofitNetworkClient())
     }
 
     fun provideTrackInteractor(): TracksInteractor {
-        return TracksInteractorImpl(getMoviesRepository())
+        return TracksInteractorImpl(getTracksRepository())
     }
 }
