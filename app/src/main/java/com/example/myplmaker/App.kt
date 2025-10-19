@@ -50,5 +50,8 @@ class App : Application() {
                 .apply()
 
         }
-    }
-}
+    }/*
+    compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
+    compiler-v8102 = { module = "com.github.bumptech.glide:compiler", version.ref = "compiler" }
+    glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+*/}
