@@ -1,4 +1,4 @@
-package com.example.myplmaker
+package com.example.myplmaker.ui.main
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -6,16 +6,16 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.example.myplmaker.R
+import com.example.myplmaker.ui.media.MediaActivity
+import com.example.myplmaker.ui.search.SearchActivity
+import com.example.myplmaker.ui.setting.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_main)
-
-
-
 
         val image = findViewById<Button>(R.id.search)
         val displayIntent = Intent(this, SearchActivity::class.java)
@@ -28,12 +28,6 @@ class MainActivity : AppCompatActivity() {
 
         image.setOnClickListener(imageClickListener)
 
-
-
-
-
-
-
         val media = findViewById<Button>(R.id.mmedia)
         media.setOnClickListener {
             val mediaIntent = Intent(this, MediaActivity::class.java)
@@ -45,11 +39,5 @@ class MainActivity : AppCompatActivity() {
             val settingIntent = Intent(this, SettingsActivity::class.java)
             startActivity(settingIntent)
         }
-
-
-
-
-
-
     }
 }

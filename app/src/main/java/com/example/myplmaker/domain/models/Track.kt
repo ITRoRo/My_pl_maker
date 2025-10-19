@@ -1,4 +1,4 @@
-package com.example.myplmaker
+package com.example.myplmaker.domain.models
 import android.os.Parcel
 import android.os.Parcelable
 
@@ -13,7 +13,8 @@ data class Track(
     val collectionName: String?, //Альбома
     val releaseDate: String?, //Год
     val primaryGenreName: String?, //Жанр
-    val country: String? //Страна
+    val country: String?,
+    val previewUrl: String//Страна
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
@@ -25,7 +26,8 @@ data class Track(
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
-        parcel.readString()
+        parcel.readString(),
+        parcel.readString().toString()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -38,6 +40,7 @@ data class Track(
         parcel.writeString(releaseDate)
         parcel.writeString(primaryGenreName)
         parcel.writeString(country)
+        parcel.writeString(previewUrl)
     }
 
     override fun describeContents(): Int {

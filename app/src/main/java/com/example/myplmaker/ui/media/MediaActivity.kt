@@ -1,8 +1,9 @@
-package com.example.myplmaker
+package com.example.myplmaker.ui.media
 
 import android.os.Bundle
 
 import androidx.appcompat.app.AppCompatActivity
+import com.example.myplmaker.R
 
 
 class MediaActivity : AppCompatActivity() {

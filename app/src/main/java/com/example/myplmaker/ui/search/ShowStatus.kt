@@ -1,4 +1,4 @@
-package com.example.myplmaker
+package com.example.myplmaker.ui.search
 
 
 import android.widget.ImageView
@@ -6,6 +6,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myplmaker.R
 import com.google.android.material.button.MaterialButton
 
 open class ShowStatus {

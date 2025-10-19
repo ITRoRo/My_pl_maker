@@ -1,9 +1,11 @@
-package com.example.myplmaker
+package com.example.myplmaker.ui
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myplmaker.R
+import com.example.myplmaker.domain.models.Track
 
 class TrackAdapter (private val trackList : ArrayList<Track>) : RecyclerView.Adapter<TrackHolder>() {
 

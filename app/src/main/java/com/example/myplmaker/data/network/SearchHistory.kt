@@ -1,14 +1,16 @@
-package com.example.myplmaker
+package com.example.myplmaker.data.network
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.example.myplmaker.App.Companion.sharedPreferences
 import com.example.myplmaker.App.Companion.HISTORY_KEY
+import com.example.myplmaker.domain.api.HistoryInterface
+import com.example.myplmaker.domain.models.Track
 import java.util.ArrayList
 
 
-class SearchHistory {
+class SearchHistory : HistoryInterface {
 
     private val gson = Gson()
 
@@ -25,7 +27,7 @@ class SearchHistory {
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-    fun addTrackInHistory(historyTracks: ArrayList<Track>, trackItem: Track) {
+    override fun addTrackInHistory(historyTracks: ArrayList<Track>, trackItem: Track) {
         if (historyTracks.contains(trackItem)) {
             historyTracks.remove(trackItem)
         }
@@ -38,7 +40,7 @@ class SearchHistory {
         sharedPreferences.edit().putString(HISTORY_KEY, json).apply()
     }
 
-    fun clearHistory(historyTracks: ArrayList<Track>) {
+    override fun clearHistory(historyTracks: ArrayList<Track>) {
         historyTracks.clear()
         sharedPreferences.edit().clear().apply()
     }
