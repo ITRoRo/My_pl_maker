@@ -182,6 +182,7 @@ class SearchActivity : AppCompatActivity() {
 
         showStatus.historyButton.setOnClickListener {
             viewModel.clearHistory()
+            showStatus.showStatus(Konst.ZAG)
         }
 
         searchDebounceRunnable = Runnable {
