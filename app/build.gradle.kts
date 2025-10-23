@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("kotlin-kapt")
 
 }
 
@@ -28,11 +27,9 @@ android {
             )
         }
     }
-
     buildFeatures {
         viewBinding = true
     }
-    
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -40,7 +37,6 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
 }
 
 dependencies {
@@ -55,11 +51,10 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation (libs.google.material.v161)
-    kapt(libs.compiler)
-
+    implementation (libs.glide)
+    annotationProcessor (libs.compiler)
     implementation (libs.gson)
     implementation (libs.retrofit)
     implementation(libs.retrofit2.converter.gson)
-    implementation (libs.glide)
-
 }
+

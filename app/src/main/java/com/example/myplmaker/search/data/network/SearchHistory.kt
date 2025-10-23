@@ -16,45 +16,58 @@ import com.practicum.playlistmaker.search.data.HistoryInterface
 
 
 
-class SearchHistory(private val sharedPreferences: SharedPreferences) :
-    HistoryInterface {
+class SearchHistory(private val sharedPreferences: SharedPreferences) : HistoryInterface {
 
-    private val gson = sharedPreferences.getString(HISTORY_KEY, Gson().toJson(null))
-    class Token : TypeToken<ArrayList<Track>>()
-    private val historyTracks : ArrayList<Track> = if(gson == Gson().toJson(null)) ArrayList() else Gson().fromJson(gson, Token().type)
+    private val gson = Gson()
 
-    /*  private fun fromJson(): ArrayList<Track> {
-        val fromJson = sharedPreferences.getString(HISTORY_KEY, null)
-        return if (fromJson != null) {
-            val turnsType = object : TypeToken<java.util.ArrayList<Track>>() {}.type
-            gson.fromJson(fromJson, turnsType)
+    // Ленивая инициализация истории для избежания загрузки при каждом обращении
+    private val historyTracks: ArrayList<Track> by lazy {
+        loadHistoryFromPrefs()
+    }
+
+    private fun loadHistoryFromPrefs(): ArrayList<Track> {
+        val historyJson = sharedPreferences.getString(HISTORY_KEY, null)
+        return if (historyJson != null) {
+            val type = object : TypeToken<ArrayList<Track>>() {}.type
+            gson.fromJson(historyJson, type)
         } else {
-            arrayListOf()
+            ArrayList()
         }
+    }
 
-    }*/
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     override fun save(track: Track) {
-        if (historyTracks.contains(track)) {
-            historyTracks.remove(track)
-        }
+        // Удаляем трек, если он уже есть в истории
+        historyTracks.removeIf { it.trackId == track.trackId }
+
+        // Добавляем трек в начало списка
+        historyTracks.add(0, track)
+
+        // Ограничиваем размер истории
         if (historyTracks.size > 10) {
-            historyTracks.removeLast()
+            historyTracks.removeAt(historyTracks.size - 1)
         }
 
-        val json = Gson().toJson(historyTracks)
-        sharedPreferences.edit().putString(HISTORY_KEY, json).apply()
+        // Сохраняем историю
+        saveToPrefs()
     }
 
     override fun load(): ArrayList<Track> {
-        return historyTracks
+        // Возвращаем копию списка, чтобы избежать изменений извне
+        return ArrayList(historyTracks)
     }
 
     override fun clearHistory() {
-
         historyTracks.clear()
-        sharedPreferences.edit().clear().apply()
+        // Удаляем только ключ истории, а не все настройки
+        sharedPreferences.edit().remove(HISTORY_KEY).apply()
     }
 
-
+    // Вспомогательный метод для сохранения истории
+    private fun saveToPrefs() {
+        val json = gson.toJson(historyTracks)
+        sharedPreferences.edit()
+            .putString(HISTORY_KEY, json)
+            .apply()
+    }
 }

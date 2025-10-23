@@ -2,7 +2,6 @@ package com.example.myplmaker.search.domain
 
 
 import com.example.myplmaker.search.domain.model.Track
-import retrofit2.Call
 
 interface TracksInteractor {
 

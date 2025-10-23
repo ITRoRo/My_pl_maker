@@ -3,30 +3,29 @@ package com.example.myplmaker
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.myplmaker.creator.Creator
 
 
 class App : Application() {
     companion object {
-        @Volatile
-        lateinit var sharedPreferences: SharedPreferences
+
         const val SETTING_KEY = "settings"
         const val HISTORY_KEY = "history_key"
         const val THEM_KEY = "them_key"
-        const val SHER_PREF_KEY = "sharedPreferences"
     }
 
     private var darkTheme = false
 
     override fun onCreate() {
         super.onCreate()
+        Creator.app = this
 
-        sharedPreferences = synchronized(this) {
-            getSharedPreferences(SHER_PREF_KEY, MODE_PRIVATE)
-        }
+        val settingInteractor = Creator.getSettingsInteractor()
+        val themeSetting = settingInteractor.switchTheme()
 
-        darkTheme = sharedPreferences.getBoolean(THEM_KEY, darkTheme)
-        switchTheme(darkTheme)
+        switchTheme(themeSetting.darkTheme)
     }
+
 
 
     fun switchTheme(darkThemeEnabled: Boolean) {
@@ -38,20 +37,8 @@ class App : Application() {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
-        saveTheme(darkThemeEnabled)
     }
 
 
-    fun saveTheme(darkTheme: Boolean) {
-        synchronized(this) {
-            sharedPreferences.edit()
-                .putBoolean(THEM_KEY, darkTheme)
-                .putBoolean(THEM_KEY, darkTheme)
-                .apply()
 
-        }
-    }/*
-    compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
-    compiler-v8102 = { module = "com.github.bumptech.glide:compiler", version.ref = "compiler" }
-    glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
-*/}
+}

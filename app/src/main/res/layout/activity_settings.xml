@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/LinearLayout"
 
-    tools:context=".ui.setting.SettingsActivity">
+    tools:context=".setting.ui.activity.SettingActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
             android:gravity="center_vertical"
             android:paddingBottom="@dimen/sixteen_dp"
             android:text="@string/nas"
-            android:textColor="@color/black_white"
+            android:textColor="@color/purple_700"
             android:textFontWeight="500"
             android:textSize="22sp"
 
@@ -54,7 +54,7 @@
         android:paddingVertical="20dp"
         android:text="@string/black_tm"
         android:textSize="16sp"
-        app:thumbTint="@color/switch_thumb_color"
+        app:thumbTint="@color/black_white"
         app:trackTint="@color/switch_track_color"
         tools:ignore="UseSwitchCompatOrMaterialXml"
         />

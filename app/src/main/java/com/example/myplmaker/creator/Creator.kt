@@ -1,10 +1,9 @@
 package com.example.myplmaker.creator
 
-import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import android.media.MediaPlayer
+import com.example.myplmaker.App
 import com.example.myplmaker.player.data.impl.PlayerRepositoryImpl
 import com.example.myplmaker.player.domain.PlayerInteractor
 import com.example.myplmaker.player.domain.PlayerRepository
@@ -25,10 +24,7 @@ import com.example.myplmaker.sharing.domain.SharingRepository
 import com.example.myplmaker.sharing.domain.impl.SharingInteractorImpl
 
 object Creator {
-
     lateinit var app: Application
-
-
 
     fun providePlayerInteractor(context: Context): PlayerInteractor {
         return PlayerInteractorImpl(providePlayerRepository())
@@ -37,7 +33,6 @@ object Creator {
     private fun providePlayerRepository(): PlayerRepository {
         return PlayerRepositoryImpl()
     }
-
 
     private fun getSearchRepository(
         sharedPreferences: SharedPreferences,
@@ -53,8 +48,7 @@ object Creator {
         return TracksInteractorImpl(getSearchRepository(sharedPreferences, context))
     }
 
-
-    private fun getSettingsRepository(): SettingRepository {
+    fun getSettingsRepository(): SettingRepository {
         return SettingRepositoryImpl(app)
     }
 
@@ -69,6 +63,4 @@ object Creator {
     fun getSharingInteractor(context: Context): SharingInteractor {
         return SharingInteractorImpl(getSharingRepository(context))
     }
-
-
 }

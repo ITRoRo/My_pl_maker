@@ -8,7 +8,7 @@ import com.example.myplmaker.setting.domain.SettingRepository
 import com.example.myplmaker.setting.domain.model.ThemeSetting
 
 class SettingRepositoryImpl(
-    private val context : Context
+    private val context: Context
 ) : SettingRepository {
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences(
         SETTING_KEY, Context.MODE_PRIVATE)
@@ -17,6 +17,7 @@ class SettingRepositoryImpl(
         val darkTheme = sharedPreferences.getBoolean(THEM_KEY, false)
         return ThemeSetting(darkTheme)
     }
+
     override fun updateTheme(checked: ThemeSetting) {
         sharedPreferences.edit()
             .putBoolean(THEM_KEY, checked.darkTheme)

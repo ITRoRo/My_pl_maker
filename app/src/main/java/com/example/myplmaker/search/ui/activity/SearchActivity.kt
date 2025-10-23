@@ -89,8 +89,9 @@ class SearchActivity : AppCompatActivity() {
     private fun setupObservers() {
         viewModel.getResult().observe(this) { result ->
             when (result.code) {
-                null -> { // Успешный поиск треков
+                null -> {
                     binding.progressBar.visibility = View.GONE
+                    binding.recicleView.visibility = View.VISIBLE
                     result.trackList?.let {
                         if (it.isNotEmpty()) {
                             updateTrackList(it)
@@ -101,15 +102,18 @@ class SearchActivity : AppCompatActivity() {
                     }
                 }
 
-                -1 -> { // Ошибка сети
+                -1 -> {
                     binding.progressBar.visibility = View.GONE
+                    binding.recicleView.visibility = View.GONE
                     showStatus.showStatus(Konst.NO_INTERNET)
                 }
 
-                -2 -> { // Загрузка истории
+                -2 -> {
+                    binding.progressBar.visibility = View.GONE
                     updateHistoryList(result.historyList)
                     if (result.historyList.isNotEmpty() && binding.inputText.hasFocus()) {
                         showStatus.showStatus(Konst.HISTORY)
+                        binding.recicleView.visibility = View.GONE
                     }
                 }
             }
@@ -184,8 +188,14 @@ class SearchActivity : AppCompatActivity() {
             val searchText = binding.inputText.text.toString()
             if (searchText.isNotEmpty()) {
                 binding.progressBar.visibility = View.VISIBLE
+                binding.recicleView.visibility = View.GONE
                 showStatus.titleError.isVisible = false
                 viewModel.search(searchText)
+            }
+        }
+        binding.inputText.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus && binding.inputText.text.toString().isEmpty()) {
+                viewModel.load()
             }
         }
     }
@@ -205,12 +215,8 @@ class SearchActivity : AppCompatActivity() {
                     searchDebounce()
                 } else {
                     binding.clear.visibility = View.GONE
-
-                    if (binding.inputText.hasFocus()) {
-                        viewModel.load()
-                    } else {
-                        showStatus.showStatus(Konst.ZAG)
-                    }
+                    binding.recicleView.visibility = View.GONE
+                    viewModel.load()
                 }
             }
 
@@ -221,6 +227,8 @@ class SearchActivity : AppCompatActivity() {
 
     private fun clearSearchAndHideKeyboard() {
         binding.inputText.setText("")
+        binding.recicleView.visibility = View.GONE
+        viewModel.load()
         val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(binding.clear.windowToken, 0)
         binding.inputText.clearFocus()
