@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/LinearLayout"
 
-    tools:context=".ui.search.SearchActivity">
+    android:orientation="vertical"
+    tools:context=".search.ui.activity.SearchActivity">
 
 
     <LinearLayout
@@ -89,13 +90,14 @@
 
     </FrameLayout>
 
-    <ProgressBar android:id="@+id/progressBar"
+    <ProgressBar
+        android:id="@+id/progressBar"
         android:layout_width="@dimen/forty_for_44dp"
         android:layout_height="@dimen/forty_for_44dp"
-        android:layout_marginTop="@dimen/hundred120dp"
         android:layout_gravity="center"
+        android:layout_marginTop="@dimen/hundred120dp"
         android:indeterminateTint="@color/blue"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/title_error"
