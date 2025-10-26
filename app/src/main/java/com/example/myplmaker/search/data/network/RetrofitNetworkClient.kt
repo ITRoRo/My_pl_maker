@@ -4,15 +4,13 @@ package com.example.myplmaker.search.data.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-
 import com.example.myplmaker.search.data.dto.Response
 import com.example.myplmaker.search.data.dto.TrackSearchRequest
-
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
-class RetrofitNetworkClient(private val context: Context) : NetworkClient {
+class RetrofitNetworkClient(private val iTunesApi: ITunesApi, private val context: Context) : NetworkClient {
     private val itunesBaseUrl = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
         .baseUrl(itunesBaseUrl)

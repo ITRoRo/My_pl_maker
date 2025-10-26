@@ -6,6 +6,10 @@ glide = "4.14.2"
 glideVersion = "8.11"
 googleMaterial = "1.12.0"
 gson = "2.10.1"
+insertKoinKoinAndroid = "3.4.0"
+koinAndroid = "4.1.1"
+koinAndroidVersion = "3.5.0"
+koinAndroidxViewmodel = "3.4.0"
 kotlin = "1.9.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -32,6 +36,11 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 #noinspection SimilarGradleDependency
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
+koin-android-v340 = { module = "io.insert-koin:koin-android", version.ref = "insertKoinKoinAndroid" }
+koin-android-v350 = { module = "io.insert-koin:koin-android", version.ref = "koinAndroidVersion" }
+koin-androidx-viewmodel = { module = "io.insert-koin:koin-androidx-viewmodel", version.ref = "koinAndroidVersion" }
+koin-androidx-viewmodel-v340 = { module = "io.insert-koin:koin-androidx-viewmodel", version.ref = "koinAndroidxViewmodel" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }

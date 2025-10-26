@@ -1,7 +1,6 @@
 package com.example.myplmaker.media.ui
 
 import android.os.Bundle
-
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myplmaker.R
 

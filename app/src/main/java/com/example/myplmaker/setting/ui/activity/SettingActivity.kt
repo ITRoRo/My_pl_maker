@@ -6,12 +6,16 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.myplmaker.R
 import com.example.myplmaker.databinding.ActivitySettingsBinding
 import com.example.myplmaker.setting.ui.view.SettingViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
+import kotlin.getValue
 
 class SettingActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
-    private lateinit var viewModel: SettingViewModel
-
+    private val viewModel: SettingViewModel by viewModel {
+        parametersOf(this@SettingActivity)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -19,10 +23,13 @@ class SettingActivity : AppCompatActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(
-            this,
-            SettingViewModel.getViewModelFactory(this)
-        )[SettingViewModel::class.java]
+        viewModel.switchThemeLD().observe(this) { themeSetting ->
+            binding.themeSwitcher.isChecked = themeSetting.darkTheme
+        }
+
+        binding.themeSwitcher.setOnCheckedChangeListener {_, isChecked ->
+            viewModel.switchTheme(isChecked)
+        }
 
         binding.back.setOnClickListener { finish() }
 
