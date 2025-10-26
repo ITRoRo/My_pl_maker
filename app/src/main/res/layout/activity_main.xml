@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="?attr/colorOnPrimary"
-        tools:context=".ui.main.MainActivity"
+        tools:context=".main.ui.MainActivity"
 
         >
 

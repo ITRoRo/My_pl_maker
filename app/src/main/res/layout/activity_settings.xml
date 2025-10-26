@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/LinearLayout"
 
-    tools:context=".ui.setting.SettingsActivity">
+    tools:context=".setting.ui.activity.SettingActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
