@@ -14,9 +14,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import com.example.myplmaker.R
-
 import com.example.myplmaker.databinding.ActivitySearchBinding
 import com.example.myplmaker.player.ui.activity.TitleActivity
 import com.example.myplmaker.search.domain.model.Track
@@ -24,6 +22,8 @@ import com.example.myplmaker.search.ui.ShowStatus
 import com.example.myplmaker.search.ui.TrackAdapter
 import com.example.myplmaker.search.ui.model.Konst
 import com.example.myplmaker.search.ui.view.SearchViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.getValue
 
 
 class SearchActivity : AppCompatActivity() {
@@ -37,7 +37,7 @@ class SearchActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var searchDebounceRunnable: Runnable
 
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel: SearchViewModel by viewModel()
     private lateinit var binding: ActivitySearchBinding
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
@@ -52,15 +52,7 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(
-            this,
-            SearchViewModel.getViewModelFactory(
-                getSharedPreferences(
-                    "app_preferences",
-                    MODE_PRIVATE
-                ), this
-            )
-        )[SearchViewModel::class.java]
+
 
         setupUI()
         setupObservers()

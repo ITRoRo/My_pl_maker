@@ -10,6 +10,7 @@ class SharingRepositoryImpl(private val context: Context) : SharingRepository {
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.type = "text/plain"
         shareIntent.putExtra(Intent.EXTRA_TEXT, messageShare)
+        shareIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         context.startActivity(shareIntent)
     }
 
@@ -19,11 +20,13 @@ class SharingRepositoryImpl(private val context: Context) : SharingRepository {
         sendIntent.putExtra(Intent.EXTRA_EMAIL, account)
         sendIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
         sendIntent.putExtra(Intent.EXTRA_TEXT, thanksMessage)
+        sendIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         context.startActivity(sendIntent)
     }
 
     override fun buttonConsent(emeilAddress: String) {
         val docIntent = Intent(Intent.ACTION_VIEW, Uri.parse(emeilAddress))
+        docIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         context.startActivity(docIntent)
     }
 }

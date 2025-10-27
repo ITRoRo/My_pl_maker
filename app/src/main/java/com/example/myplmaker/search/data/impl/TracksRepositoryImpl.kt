@@ -1,23 +1,14 @@
 package com.example.myplmaker.search.data.impl
 
-import android.content.SharedPreferences
-import android.os.Build
-import androidx.annotation.RequiresApi
-
-
 import com.example.myplmaker.search.data.dto.TrackSearchRequest
 import com.example.myplmaker.search.data.dto.TrackSearchResponse
 import com.example.myplmaker.search.data.model.Answers
 import com.example.myplmaker.search.data.network.NetworkClient
 import com.example.myplmaker.search.domain.TracksRepository
 import com.example.myplmaker.search.domain.model.Track
-import com.practicum.playlistmaker.search.data.impl.SearchHistory
 
 
-class TracksRepositoryImpl(sharedPreferences: SharedPreferences, private val networkClient: NetworkClient) : TracksRepository {
-
-    private val history = SearchHistory(sharedPreferences)
-
+class TracksRepositoryImpl( private val networkClient: NetworkClient) : TracksRepository {
 
     override fun searchTracks(text: String): Answers<List<Track>> {
         val response = networkClient.doRequest(TrackSearchRequest(text))
@@ -43,19 +34,6 @@ class TracksRepositoryImpl(sharedPreferences: SharedPreferences, private val net
 
             else -> Answers.Error(400)
         }
-    }
-
-    override fun load(): List<Track> {
-        return history.load()
-    }
-
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-    override fun save(trackItem: Track) {
-        history.save(trackItem)
-    }
-
-    override fun clearHistory() {
-        history.clearHistory()
     }
 }
 

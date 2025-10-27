@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.myplmaker.R
 import com.example.myplmaker.creator.DateFormatUtils
@@ -14,11 +13,13 @@ import com.example.myplmaker.player.ui.PlayerState
 import com.example.myplmaker.player.ui.TrackUiState
 import com.example.myplmaker.player.ui.view.TitleViewModel
 import com.example.myplmaker.search.domain.model.Track
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.getValue
 
 class TitleActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityTitleTreckBinding
-    private lateinit var viewModel: TitleViewModel
+    private val viewModel: TitleViewModel by viewModel()
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,10 +27,7 @@ class TitleActivity : AppCompatActivity() {
         binding = ActivityTitleTreckBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(
-            this,
-            TitleViewModel.getViewModelFactory(this)
-        )[TitleViewModel::class.java]
+
 
         val trackItem = intent.getParcelableExtra("trackObject", Track::class.java)
         if (trackItem == null) {
@@ -124,6 +122,9 @@ class TitleActivity : AppCompatActivity() {
         super.onPause()
         viewModel.onPause()
     }
-
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.onCleared()
+    }
 
 }

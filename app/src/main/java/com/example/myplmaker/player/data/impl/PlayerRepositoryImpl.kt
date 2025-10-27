@@ -4,11 +4,15 @@ import android.media.MediaPlayer
 import com.example.myplmaker.player.domain.PlayerRepository
 import java.io.IOException
 
-class PlayerRepositoryImpl : PlayerRepository {
-    private val mediaPlayer = MediaPlayer()
+class PlayerRepositoryImpl(
+    private val mediaPlayer: MediaPlayer
+) : PlayerRepository {
 
     override fun prepareMedia(url: String, onPrepared: () -> Unit, onCompletion: () -> Unit) {
         try {
+            if (mediaPlayer.isPlaying) {
+                mediaPlayer.stop()
+            }
             mediaPlayer.reset()
             mediaPlayer.setDataSource(url)
             mediaPlayer.setOnPreparedListener { onPrepared() }

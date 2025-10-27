@@ -8,7 +8,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.myplmaker.creator.Creator
 import com.example.myplmaker.player.domain.PlayerInteractor
 import com.example.myplmaker.player.ui.PlayerState
 import com.example.myplmaker.player.ui.TrackUiState
@@ -27,15 +26,7 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor) : ViewModel
 
     companion object {
         private const val POSITION_UPDATE_DELAY = 1000L
-
-        fun getViewModelFactory(context: Context): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return TitleViewModel(Creator.providePlayerInteractor(context)) as T
-                }
-            }
-    }
+          }
 
     fun initTrack(track: Track) {
         currentTrack = track
@@ -80,7 +71,7 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor) : ViewModel
         when (currentState) {
             PlayerState.PLAYING -> pausePlayer()
             PlayerState.PREPARED, PlayerState.PAUSED -> startPlayer()
-            else -> {} // ничего не делаем
+            else -> {}
         }
     }
 
@@ -98,6 +89,8 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor) : ViewModel
     }
 
     private fun resetPlayer() {
+        handler.removeCallbacks(timeUpdateRunnable)
+
         currentState = PlayerState.PREPARED
         _uiState.postValue(
             _uiState.value?.copy(
@@ -114,7 +107,7 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor) : ViewModel
         }
     }
 
-    override fun onCleared() {
+    public override fun onCleared() {
         super.onCleared()
         handler.removeCallbacks(timeUpdateRunnable)
         playerInteractor.releaseResources()

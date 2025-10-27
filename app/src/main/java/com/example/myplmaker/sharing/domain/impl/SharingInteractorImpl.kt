@@ -1,12 +1,11 @@
 package com.example.myplmaker.sharing.domain.impl
 
+import android.content.Context
 import com.example.myplmaker.R
-import com.example.myplmaker.creator.Creator
 import com.example.myplmaker.sharing.domain.SharingRepository
 import com.example.myplmaker.sharing.domain.SharingInteractor
 
-class SharingInteractorImpl(private val repository: SharingRepository) : SharingInteractor {
-    private val app = Creator.app
+class SharingInteractorImpl(private val repository: SharingRepository,  private val app: Context) : SharingInteractor {
 
     override fun buttonShare() {
         repository.buttonShare(getLinkApp())

@@ -5,5 +5,4 @@ enum class Konst {
     NO_TRACK,
     ZAG,
     HISTORY,
-
    }

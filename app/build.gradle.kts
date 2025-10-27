@@ -56,5 +56,9 @@ dependencies {
     implementation (libs.gson)
     implementation (libs.retrofit)
     implementation(libs.retrofit2.converter.gson)
+    //implementation(libs.koin.android)
+
+    implementation(libs.koin.android.v340)
+  //  implementation(libs.koin.androidx.viewmodel.v340)
 }
 

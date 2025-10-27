@@ -26,15 +26,5 @@ class TracksInteractorImpl(private val repository: TracksRepository) : TracksInt
         }
     }
 
-    override fun load(): List<Track> {
-        return repository.load()
-    }
 
-    override fun save(trackItem: Track) {
-        repository.save(trackItem)
-    }
-
-    override fun clearHistory() {
-        repository.clearHistory()
-    }
 }
