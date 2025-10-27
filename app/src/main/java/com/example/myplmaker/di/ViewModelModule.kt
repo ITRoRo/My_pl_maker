@@ -1,5 +1,8 @@
 package com.example.myplmaker.di
 
+import com.example.myplmaker.media.ui.view.FavoriteViewModel
+import com.example.myplmaker.media.ui.view.MediaViewModel
+import com.example.myplmaker.media.ui.view.PlaylistsViewModel
 import com.example.myplmaker.player.ui.view.TitleViewModel
 import com.example.myplmaker.search.ui.view.SearchViewModel
 import com.example.myplmaker.setting.ui.view.SettingViewModel
@@ -21,5 +24,16 @@ val viewModelModule = module {
 
     viewModel {
         SearchViewModel(get(), get())
+    }
+    viewModel {
+        MediaViewModel()
+    }
+
+    viewModel {
+        FavoriteViewModel()
+    }
+
+    viewModel {
+        PlaylistsViewModel()
     }
 }

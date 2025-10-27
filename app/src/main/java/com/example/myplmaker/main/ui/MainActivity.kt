@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myplmaker.R
-import com.example.myplmaker.media.ui.MediaActivity
+import com.example.myplmaker.media.ui.activyty.MediaActivity
 import com.example.myplmaker.search.ui.activity.SearchActivity
 import com.example.myplmaker.setting.ui.activity.SettingActivity
 
