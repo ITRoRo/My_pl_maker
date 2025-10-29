@@ -1,22 +1,24 @@
-package com.example.myplmaker.search.ui.activity
+package com.example.myplmaker.search.ui.fragment
 
 import android.annotation.SuppressLint
-import android.content.Intent
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.myplmaker.R
-import com.example.myplmaker.databinding.ActivitySearchBinding
-import com.example.myplmaker.player.ui.activity.TitleActivity
+import com.example.myplmaker.databinding.FragmentSearchBinding
 import com.example.myplmaker.search.domain.model.Track
 import com.example.myplmaker.search.ui.ShowStatus
 import com.example.myplmaker.search.ui.TrackAdapter
@@ -25,8 +27,7 @@ import com.example.myplmaker.search.ui.view.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
 
-
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
     companion object {
         const val PRODUCT_AMOUNT = "PRODUCT_AMOUNT"
         const val AMOUNT_DEF = ""
@@ -38,7 +39,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchDebounceRunnable: Runnable
 
     private val viewModel: SearchViewModel by viewModel()
-    private lateinit var binding: ActivitySearchBinding
+    private lateinit var binding: FragmentSearchBinding
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
 
@@ -46,13 +47,17 @@ class SearchActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     @SuppressLint("NotifyDataSetChanged")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         setupUI()
         setupObservers()
@@ -65,21 +70,21 @@ class SearchActivity : AppCompatActivity() {
 
         binding.recicleView.adapter = trackAdapter
 
-        showStatus.titleError = findViewById(R.id.title_error)
-        showStatus.imageError = findViewById(R.id.image_error)
-        showStatus.textError = findViewById(R.id.text_error)
-        showStatus.textErrorInternet = findViewById(R.id.text_error_internet)
-        showStatus.updateButton = findViewById(R.id.update_button)
-        showStatus.historyBlock = findViewById(R.id.history)
-        showStatus.historyText = findViewById(R.id.history_icon)
-        showStatus.historyButton = findViewById(R.id.clear_history)
-        showStatus.reciclerViewHistoryTrack = findViewById(R.id.view_history)
+        showStatus.titleError = binding.titleError
+        showStatus.imageError = binding.imageError
+        showStatus.textError = binding.textError
+        showStatus.textErrorInternet = binding.textErrorInternet
+        showStatus.updateButton = binding.updateButton
+        showStatus.historyBlock = binding.history
+        showStatus.historyText = binding.historyIcon
+        showStatus.historyButton = binding.clearHistory
+        showStatus.reciclerViewHistoryTrack = binding.viewHistory
 
         viewModel.load()
     }
 
     private fun setupObservers() {
-        viewModel.getResult().observe(this) { result ->
+        viewModel.getResult().observe(viewLifecycleOwner) { result ->
             when (result.code) {
                 null -> {
                     binding.progressBar.visibility = View.GONE
@@ -129,25 +134,35 @@ class SearchActivity : AppCompatActivity() {
             if (clickDebounce()) {
                 binding.inputText.clearFocus()
                 viewModel.save(trackItem)
-                startActivity(Intent(this, TitleActivity::class.java).apply {
-                    putExtra("trackObject", trackItem)
-                })
+                val bundle = Bundle().apply {
+                    putParcelable("trackObject", trackItem)
+                }
+                findNavController().navigate(
+                    R.id.action_searchFragment_to_titleFragment,
+                    bundle
+                )
             }
         }
     }
 
     private fun setupHistoryClickListener() {
         historyAdapter.onItemClick = { trackItem ->
-            startActivity(Intent(this, TitleActivity::class.java).apply {
-                putExtra("trackObject", trackItem)
-            })
+            val bundle = Bundle().apply {
+                putParcelable("trackObject", trackItem)
+            }
+            findNavController().navigate(R.id.action_searchFragment_to_titleFragment, bundle)
         }
-    }
+        }
+
+
+
+
+
 
     private fun setupListeners() {
-        binding.back.setOnClickListener {
-            this.finish()
-        }
+     //   binding.back.setOnClickListener {
+      //      this.finish()
+      //  }
 
         binding.inputText.addTextChangedListener(createTextWatcher())
 
@@ -222,7 +237,7 @@ class SearchActivity : AppCompatActivity() {
         binding.inputText.setText("")
         binding.recicleView.visibility = View.GONE
         viewModel.load()
-        val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager = requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(binding.clear.windowToken, 0)
         binding.inputText.clearFocus()
     }
@@ -241,14 +256,10 @@ class SearchActivity : AppCompatActivity() {
         return current
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(PRODUCT_AMOUNT, viewModel.searchText)
-    }
+//    override fun onSaveInstanceState(outState: Bundle) {
+ //       super.onSaveInstanceState(outState)
+  //      outState.putString(PRODUCT_AMOUNT, viewModel.searchText)
+  //  }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        viewModel.searchText = savedInstanceState.getString(PRODUCT_AMOUNT, AMOUNT_DEF)
-        binding.inputText.setText(viewModel.searchText)
-    }
+
 }
