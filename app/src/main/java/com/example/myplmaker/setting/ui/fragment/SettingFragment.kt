@@ -1,29 +1,31 @@
-package com.example.myplmaker.setting.ui.activity
+package com.example.myplmaker.setting.ui.fragment
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
 import com.example.myplmaker.R
-import com.example.myplmaker.databinding.ActivitySettingsBinding
+import com.example.myplmaker.databinding.FragmentSettingsBinding
 import com.example.myplmaker.setting.ui.view.SettingViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import kotlin.getValue
 
-class SettingActivity : AppCompatActivity() {
+class SettingFragment : Fragment() {
 
-    private lateinit var binding: ActivitySettingsBinding
-    private val viewModel: SettingViewModel by viewModel {
-        parametersOf(this@SettingActivity)
+    private lateinit var binding: FragmentSettingsBinding
+    private val viewModel by viewModel<SettingViewModel>()
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) : View {
+        binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        return binding.root
     }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+    override fun onViewCreated(view : View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        binding = ActivitySettingsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        viewModel.switchThemeLD().observe(this) { themeSetting ->
+        viewModel.switchThemeLD().observe(viewLifecycleOwner) { themeSetting ->
             binding.themeSwitcher.isChecked = themeSetting.darkTheme
         }
 
@@ -31,16 +33,14 @@ class SettingActivity : AppCompatActivity() {
             viewModel.switchTheme(isChecked)
         }
 
-        binding.back.setOnClickListener { finish() }
-
-        binding.themeSwitcher.apply {
+    /*  binding.themeSwitcher.apply {
             viewModel.switchThemeLD().observe(this@SettingActivity) {
                 isChecked = it.darkTheme
                 setOnCheckedChangeListener { _, _ ->
                     viewModel.switchTheme(isChecked)
                 }
             }
-        }
+        }*/
 
         binding.share.setOnClickListener {
             viewModel.buttonShare()
