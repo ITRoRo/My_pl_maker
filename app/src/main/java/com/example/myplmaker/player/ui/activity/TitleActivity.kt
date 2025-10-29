@@ -1,65 +1,49 @@
-package com.example.myplmaker.player.ui.fragment
+package com.example.myplmaker.player.ui.activity
 
 import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.myplmaker.R
 import com.example.myplmaker.creator.DateFormatUtils
-import com.example.myplmaker.databinding.FragmentTitleTreckBinding
+import com.example.myplmaker.databinding.ActivityTitleTreckBinding
 import com.example.myplmaker.player.ui.PlayerState
 import com.example.myplmaker.player.ui.TrackUiState
 import com.example.myplmaker.player.ui.view.TitleViewModel
 import com.example.myplmaker.search.domain.model.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
+import kotlin.getValue
 
-class TitleFragment : Fragment() {
+class TitleActivity : AppCompatActivity() {
 
-    private lateinit var binding: FragmentTitleTreckBinding
-    private val viewModel: TitleViewModel by viewModel{
-        parametersOf(requireActivity())
-    }
-    private var trackItem: Track? = null
+    private lateinit var binding: ActivityTitleTreckBinding
+    private val viewModel: TitleViewModel by viewModel()
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentTitleTreckBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityTitleTreckBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
-        binding.backButton.setOnClickListener {
-            findNavController().popBackStack()
-        }
 
-        // Получи данные из аргументов вместо intent
-        trackItem = arguments?.getParcelable("trackObject", Track::class.java)
+        val trackItem = intent.getParcelableExtra("trackObject", Track::class.java)
         if (trackItem == null) {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            finish()
             return
         }
 
-        setupUI(trackItem!!)
-        viewModel.initTrack(trackItem!!)
+        setupUI(trackItem)
+        viewModel.initTrack(trackItem)
         observeViewModel()
     }
 
     private fun setupUI(track: Track) {
-
+        binding.backButton.setOnClickListener {
+            finish()
+        }
 
         binding.titleTrack.text = track.trackName
         binding.artistName.text = track.artistName
@@ -98,7 +82,7 @@ class TitleFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.uiState.observe(viewLifecycleOwner) { state ->
+        viewModel.uiState.observe(this) { state ->
             updatePlayerUI(state)
         }
     }
@@ -138,19 +122,9 @@ class TitleFragment : Fragment() {
         super.onPause()
         viewModel.onPause()
     }
-
     override fun onDestroy() {
         super.onDestroy()
         viewModel.onCleared()
     }
 
-    companion object {
-        fun newInstance(track: Track): TitleFragment {
-            return TitleFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable("trackObject", track)
-                }
-            }
-        }
-    }
 }

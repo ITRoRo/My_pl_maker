@@ -5,7 +5,7 @@
     style="@style/LinearLayout"
 
     android:orientation="vertical"
-    tools:context=".search.ui.fragment.SearchFragment">
+    tools:context=".search.ui.activity.SearchActivity">
 
 
     <LinearLayout
@@ -13,13 +13,22 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-
+        <ImageButton
+            android:id="@+id/back"
+            android:layout_width="@dimen/twenty_four_dp"
+            android:layout_height="@dimen/twenty_four_dp"
+            android:layout_marginStart="@dimen/sixteen_dp"
+            android:layout_marginTop="@dimen/sixteen_dp"
+            android:backgroundTint="@android:color/transparent"
+            android:src="@drawable/back"
+            app:tint="@color/black_white"
+            tools:ignore="ContentDescription" />
 
         <TextView
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/sixteen_dp"
+            android:layout_marginStart="25dp"
             android:layout_marginTop="14dp"
             android:fontFamily="@font/ys_display_medium"
             android:gravity="center_vertical"
@@ -39,6 +48,7 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="@dimen/sixteen_dp"
         android:paddingVertical="8dp">
+
         <EditText
             android:id="@+id/input_text"
             android:layout_width="match_parent"

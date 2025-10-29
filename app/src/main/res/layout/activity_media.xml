@@ -3,19 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/LinearLayout"
 
-    tools:context=".media.ui.fragment.MediaFragment">
+    tools:context=".media.ui.activyty.MediaActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <ImageButton
+            android:id="@+id/back"
+            android:layout_width="@dimen/twenty_four_dp"
+            android:layout_height="@dimen/twenty_four_dp"
+            android:layout_marginStart="@dimen/sixteen_dp"
+            android:layout_marginTop="@dimen/sixteen_dp"
+            android:backgroundTint="@android:color/transparent"
+            android:src="@drawable/back"
+            app:tint="@color/black_white"
+            tools:ignore="ContentDescription" />
 
         <TextView
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/sixteen_dp"
+            android:layout_marginStart="25dp"
             android:layout_marginTop="14dp"
             android:fontFamily="@font/ys_display_medium"
             android:gravity="center_vertical"

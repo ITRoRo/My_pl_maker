@@ -60,9 +60,5 @@ dependencies {
     //noinspection GradleDependency
     implementation(libs.androidx.viewpager2)
     implementation(libs.koin.android.v340)
-    implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.androidx.navigation.ui.ktx)
-    //noinspection GradleDependency
-    implementation(libs.androidx.fragment.ktx)
 }
 
