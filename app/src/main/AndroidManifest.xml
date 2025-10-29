@@ -26,21 +26,12 @@
         android:usesCleartextTraffic="true"
         >
 
+
         <activity
-            android:name=".setting.ui.activity.SettingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".player.ui.activity.TitleActivity"
-            android:exported="false" />
-        <activity
-            android:name=".search.ui.activity.SearchActivity"
-            android:exported="false" />
-        <activity
-            android:name=".media.ui.activyty.MediaActivity"
-            android:exported="false" />
-        <activity
-            android:name=".main.ui.MainActivity"
-            android:exported="true">
+            android:name=".main.ui.RootActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustNothing">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
