@@ -6,33 +6,38 @@ import com.example.myplmaker.search.data.model.Answers
 import com.example.myplmaker.search.data.network.NetworkClient
 import com.example.myplmaker.search.domain.TracksRepository
 import com.example.myplmaker.search.domain.model.Track
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 
-class TracksRepositoryImpl( private val networkClient: NetworkClient) : TracksRepository {
+class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
 
-    override fun searchTracks(text: String): Answers<List<Track>> {
+    override fun searchTracks(text: String): Flow<Answers<List<Track>>> = flow {
         val response = networkClient.doRequest(TrackSearchRequest(text))
-        return when (response.resultCode) {
-            -1 -> Answers.Error(-1)
+        when (response.resultCode) {
+            -1 -> emit(Answers.Error(-1))
             200 -> {
-                Answers.Success((response as TrackSearchResponse).results.map {
-                    Track(
-                        it.trackName.toString(), // Название композиции
-                        it.artistName, // Имя исполнителя
-                        it.trackTimeMillis, // Продолжительность трека
-                        it.artworkUrl100,
-                        it.trackId,// Ссылка
-                        it.collectionName, //Альбома
-                        it.releaseDate, //Год
-                        it.primaryGenreName, //Жанр
-                        it.country,
-                        it.previewUrl
-                    )
-
-                })
+                with(response as TrackSearchResponse) {
+                    val data = response.results.map {
+                        Track(
+                            it.trackName.toString(), // Название композиции
+                            it.artistName, // Имя исполнителя
+                            it.trackTimeMillis, // Продолжительность трека
+                            it.artworkUrl100,
+                            it.trackId,// Ссылка
+                            it.collectionName, //Альбома
+                            it.releaseDate, //Год
+                            it.primaryGenreName, //Жанр
+                            it.country,
+                            it.previewUrl
+                        )
+                    }
+                    emit(Answers.Success(data))
+                }
             }
 
-            else -> Answers.Error(400)
+            else -> emit(Answers.Error(400))
+
         }
     }
 }

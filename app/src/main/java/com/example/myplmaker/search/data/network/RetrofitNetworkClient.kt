@@ -10,29 +10,22 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
-class RetrofitNetworkClient(private val iTunesApi: ITunesApi, private val context: Context) : NetworkClient {
-    private val itunesBaseUrl = "https://itunes.apple.com"
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(itunesBaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-    private val itunesService: ITunesApi = retrofit.create(ITunesApi::class.java)
+class RetrofitNetworkClient(private val iTunesApi: ITunesApi, private val context: Context) :
+    NetworkClient {
 
-    override fun doRequest(dto: Any): Response {
+    override suspend fun doRequest(dto: Any): Response {
         if (!isConnected()) {
             return Response().apply { resultCode = -1 }
         }
 
-        if (dto is TrackSearchRequest) {
-            return try {
-                val resp = itunesService.searchTracks(dto.text).execute()
-                val body = resp.body() ?: Response()
-                body.apply { resultCode = resp.code() }
-            } catch (e: Exception) {
-                Response().apply { resultCode = -1 }
-            }
-        } else {
+        if (dto !is TrackSearchRequest) {
             return Response().apply { resultCode = 400 }
+        }
+        return try {
+            val resp = iTunesApi.searchTracks(dto.text)
+            resp.apply { resultCode = 200 }
+        } catch (e: Exception) {
+            Response().apply { resultCode = 500 }
         }
     }
 

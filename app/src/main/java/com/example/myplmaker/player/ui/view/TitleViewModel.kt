@@ -8,10 +8,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.myplmaker.player.domain.PlayerInteractor
 import com.example.myplmaker.player.ui.PlayerState
 import com.example.myplmaker.player.ui.TrackUiState
 import com.example.myplmaker.search.domain.model.Track
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 class TitleViewModel(private val playerInteractor: PlayerInteractor) : ViewModel() {
@@ -21,8 +25,7 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor) : ViewModel
 
     private lateinit var currentTrack: Track
     private var currentState = PlayerState.DEFAULT
-    private val handler = Handler(Looper.getMainLooper())
-    private lateinit var timeUpdateRunnable: Runnable
+    private var positionUpdateJob: Job? = null
 
     companion object {
         private const val POSITION_UPDATE_DELAY = 1000L
@@ -31,15 +34,6 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor) : ViewModel
     fun initTrack(track: Track) {
         currentTrack = track
         _uiState.value = TrackUiState(track, PlayerState.DEFAULT)
-
-        timeUpdateRunnable = object : Runnable {
-            override fun run() {
-                if (currentState == PlayerState.PLAYING) {
-                    updateCurrentPosition()
-                    handler.postDelayed(this, POSITION_UPDATE_DELAY)
-                }
-            }
-        }
 
         preparePlayer()
     }
@@ -55,6 +49,22 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor) : ViewModel
                 resetPlayer()
             }
         )
+    }
+
+    private fun startPositionUpdateCoroutine() {
+        stopPositionUpdateCoroutine()
+
+        positionUpdateJob = viewModelScope.launch {
+            while (currentState == PlayerState.PLAYING) {
+                updateCurrentPosition()
+                delay(POSITION_UPDATE_DELAY)
+            }
+        }
+    }
+
+    private fun stopPositionUpdateCoroutine() {
+        positionUpdateJob?.cancel()
+        positionUpdateJob = null
     }
 
     private fun updateCurrentPosition() {
@@ -79,17 +89,18 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor) : ViewModel
         playerInteractor.playTrack()
         currentState = PlayerState.PLAYING
         _uiState.value = _uiState.value?.copy(playerState = PlayerState.PLAYING)
-        handler.post(timeUpdateRunnable)
+        startPositionUpdateCoroutine()
     }
 
     private fun pausePlayer() {
         playerInteractor.pauseTrack()
         currentState = PlayerState.PAUSED
         _uiState.value = _uiState.value?.copy(playerState = PlayerState.PAUSED)
+        stopPositionUpdateCoroutine()
     }
 
     private fun resetPlayer() {
-        handler.removeCallbacks(timeUpdateRunnable)
+        stopPositionUpdateCoroutine()
 
         currentState = PlayerState.PREPARED
         _uiState.postValue(
@@ -101,15 +112,11 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor) : ViewModel
     }
 
     fun onPause() {
-        handler.removeCallbacks(timeUpdateRunnable)
+        stopPositionUpdateCoroutine()
         if (currentState == PlayerState.PLAYING) {
             pausePlayer()
         }
     }
 
-    public override fun onCleared() {
-        super.onCleared()
-        handler.removeCallbacks(timeUpdateRunnable)
-        playerInteractor.releaseResources()
-    }
+
 }

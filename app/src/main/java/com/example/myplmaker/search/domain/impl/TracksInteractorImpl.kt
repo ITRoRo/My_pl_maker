@@ -5,26 +5,24 @@ import com.example.myplmaker.search.data.model.Answers
 import com.example.myplmaker.search.domain.TracksInteractor
 import com.example.myplmaker.search.domain.TracksRepository
 import com.example.myplmaker.search.domain.model.Track
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.util.concurrent.Executors
 
 class TracksInteractorImpl(private val repository: TracksRepository) : TracksInteractor {
 
-    private val executor = Executors.newCachedThreadPool()
 
-    override fun searchTracks(text: String, consumer: TracksInteractor.TracksConsumer) {
-
-        executor.execute {
-            when (val stateType: Answers<List<Track>> = repository.searchTracks(text)) {
+    override fun searchTracks(text: String) : Flow<Pair<List<Track>?, Int?>> {
+        return repository.searchTracks(text).map { result ->
+            when (result) {
                 is Answers.Success -> {
-                    consumer.consumer(stateType.data, null)
+                    Pair(result.data, null)
                 }
 
-                else -> {
-                    consumer.consumer(null, stateType.answer)
+                is Answers.Error -> {
+                    Pair(null, result.answer)
                 }
             }
         }
     }
-
-
-}
+    }

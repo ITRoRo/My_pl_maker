@@ -1,6 +1,7 @@
 package com.example.myplmaker.search.ui.fragment
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Build
 import android.os.Bundle
@@ -35,11 +36,11 @@ class SearchFragment : Fragment() {
     }
 
     private var isClickAllowed = true
-    private val handler = Handler(Looper.getMainLooper())
     private lateinit var searchDebounceRunnable: Runnable
 
     private val viewModel: SearchViewModel by viewModel()
-    private lateinit var binding: FragmentSearchBinding
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
     private lateinit var trackAdapter: TrackAdapter
     private lateinit var historyAdapter: TrackAdapter
 
@@ -52,7 +53,7 @@ class SearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -60,15 +61,14 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupUI()
+        setupAdapters()
         setupObservers()
         setupListeners()
+        viewModel.load()
     }
 
-    private fun setupUI() {
-        trackAdapter = TrackAdapter(arrayListOf())
-        historyAdapter = TrackAdapter(arrayListOf())
 
-        binding.recicleView.adapter = trackAdapter
+    private fun setupUI() {
 
         showStatus.titleError = binding.titleError
         showStatus.imageError = binding.imageError
@@ -80,186 +80,127 @@ class SearchFragment : Fragment() {
         showStatus.historyButton = binding.clearHistory
         showStatus.reciclerViewHistoryTrack = binding.viewHistory
 
-        viewModel.load()
+    }
+
+    private fun setupAdapters() {
+        trackAdapter = TrackAdapter(arrayListOf())
+        historyAdapter = TrackAdapter(arrayListOf())
+        binding.recicleView.adapter = trackAdapter
+        binding.viewHistory.adapter = historyAdapter
+
+        trackAdapter.onItemClick = { track ->
+            if (viewModel.clickDebounce()) {
+                viewModel.save(track)
+                navigateToPlayer(track)
+            }
+        }
+
+        historyAdapter.onItemClick = { track ->
+            if (viewModel.clickDebounce()) {
+                navigateToPlayer(track)
+            }
+        }
+    }
+
+    private fun navigateToPlayer(track: Track) {
+        findNavController().navigate(
+            R.id.action_searchFragment_to_titleFragment,
+            Bundle().apply { putParcelable("trackObject", track) }
+        )
     }
 
     private fun setupObservers() {
-        viewModel.getResult().observe(viewLifecycleOwner) { result ->
+
+        viewModel.observeState().observe(viewLifecycleOwner) { result ->
+            binding.progressBar.visibility = View.GONE
             when (result.code) {
-                null -> {
-                    binding.progressBar.visibility = View.GONE
-                    binding.recicleView.visibility = View.VISIBLE
-                    result.trackList?.let {
-                        if (it.isNotEmpty()) {
-                            updateTrackList(it)
-                            showStatus.showStatus(Konst.ZAG)
-                        } else {
-                            showStatus.showStatus(Konst.NO_TRACK)
-                        }
+                200 -> {
+                    if (result.trackList.isNullOrEmpty()) {
+                        showStatus.showStatus(Konst.NO_TRACK)
+                    } else {
+                        showStatus.showStatus(Konst.ZAG)
+                        binding.recicleView.visibility = View.VISIBLE
+                        updateTrackList(result.trackList)
                     }
                 }
 
                 -1 -> {
-                    binding.progressBar.visibility = View.GONE
-                    binding.recicleView.visibility = View.GONE
                     showStatus.showStatus(Konst.NO_INTERNET)
                 }
 
                 -2 -> {
-                    binding.progressBar.visibility = View.GONE
                     updateHistoryList(result.historyList)
-                    if (result.historyList.isNotEmpty() && binding.inputText.hasFocus()) {
+                    if (result.historyList.isNotEmpty() && binding.inputText.text.isEmpty()) {
                         showStatus.showStatus(Konst.HISTORY)
-                        binding.recicleView.visibility = View.GONE
+                    } else {
+                        showStatus.showStatus(Konst.ZAG)
                     }
                 }
             }
         }
     }
 
-    private fun updateTrackList(tracks: List<Track>) {
-        trackAdapter = TrackAdapter(ArrayList(tracks))
-        binding.recicleView.adapter = trackAdapter
-        setupTrackClickListener()
-    }
-
-    private fun updateHistoryList(tracks: List<Track>) {
-        historyAdapter = TrackAdapter(ArrayList(tracks))
-        showStatus.reciclerViewHistoryTrack.adapter = historyAdapter
-        setupHistoryClickListener()
-    }
-
-    private fun setupTrackClickListener() {
-        trackAdapter.onItemClick = { trackItem ->
-            if (clickDebounce()) {
-                binding.inputText.clearFocus()
-                viewModel.save(trackItem)
-                val bundle = Bundle().apply {
-                    putParcelable("trackObject", trackItem)
-                }
-                findNavController().navigate(
-                    R.id.action_searchFragment_to_titleFragment,
-                    bundle
-                )
-            }
-        }
-    }
-
-    private fun setupHistoryClickListener() {
-        historyAdapter.onItemClick = { trackItem ->
-            val bundle = Bundle().apply {
-                putParcelable("trackObject", trackItem)
-            }
-            findNavController().navigate(R.id.action_searchFragment_to_titleFragment, bundle)
-        }
-        }
-
-
-
-
-
-
     private fun setupListeners() {
-     //   binding.back.setOnClickListener {
-      //      this.finish()
-      //  }
-
-        binding.inputText.addTextChangedListener(createTextWatcher())
-
         binding.clear.setOnClickListener {
-            clearSearchAndHideKeyboard()
+            binding.inputText.setText("")
+
         }
 
-        binding.inputText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                searchDebounce()
+        binding.inputText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.clear.visibility = if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
+                viewModel.searchDebounce(s.toString())
+
+                if (!s.isNullOrEmpty()) {
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.recicleView.visibility = View.GONE
+                    showStatus.showStatus(Konst.ZAG)
+                } else {
+                    binding.progressBar.visibility = View.GONE
+                    binding.recicleView.visibility = View.GONE
+                }
             }
-            false
-        }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
 
         binding.inputText.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
+            if (hasFocus && binding.inputText.text.isEmpty()) {
                 viewModel.load()
             }
         }
 
         showStatus.updateButton.setOnClickListener {
-            searchDebounce()
+            binding.progressBar.visibility = View.VISIBLE
+            binding.recicleView.visibility = View.GONE
+            showStatus.showStatus(Konst.ZAG)
+            viewModel.searchDebounce(binding.inputText.text.toString())
         }
 
         showStatus.historyButton.setOnClickListener {
             viewModel.clearHistory()
-            showStatus.showStatus(Konst.ZAG)
-        }
-
-        searchDebounceRunnable = Runnable {
-            val searchText = binding.inputText.text.toString()
-            if (searchText.isNotEmpty()) {
-                binding.progressBar.visibility = View.VISIBLE
-                binding.recicleView.visibility = View.GONE
-                showStatus.titleError.isVisible = false
-                viewModel.search(searchText)
-            }
-        }
-        binding.inputText.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus && binding.inputText.text.toString().isEmpty()) {
-                viewModel.load()
-            }
         }
     }
 
-    private fun createTextWatcher(): TextWatcher {
-        return object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val text = s.toString()
-
-                viewModel.searchText = text
-
-                if (text.isNotEmpty()) {
-                    binding.clear.visibility = View.VISIBLE
-                    showStatus.showStatus(Konst.ZAG)
-                    searchDebounce()
-                } else {
-                    binding.clear.visibility = View.GONE
-                    binding.recicleView.visibility = View.GONE
-                    viewModel.load()
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-            }
-        }
+    private fun updateTrackList(tracks: List<Track>) {
+        trackAdapter.trackList.clear()
+        trackAdapter.trackList.addAll(tracks)
+        trackAdapter.notifyDataSetChanged()
     }
 
-    private fun clearSearchAndHideKeyboard() {
-        binding.inputText.setText("")
-        binding.recicleView.visibility = View.GONE
-        viewModel.load()
-        val inputMethodManager = requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(binding.clear.windowToken, 0)
-        binding.inputText.clearFocus()
+    private fun updateHistoryList(tracks: List<Track>) {
+        historyAdapter.trackList.clear()
+        historyAdapter.trackList.addAll(tracks)
+        historyAdapter.notifyDataSetChanged()
     }
 
-    private fun searchDebounce() {
-        handler.removeCallbacks(searchDebounceRunnable)
-        handler.postDelayed(searchDebounceRunnable, CLICK_DEBOUNCE_DELAY)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
-
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-        }
-        return current
-    }
-
-//    override fun onSaveInstanceState(outState: Bundle) {
- //       super.onSaveInstanceState(outState)
-  //      outState.putString(PRODUCT_AMOUNT, viewModel.searchText)
-  //  }
-
-
 }
+
+
+
+
