@@ -46,7 +46,6 @@ class TitleFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        // Получи данные из аргументов вместо intent
         trackItem = arguments?.getParcelable("trackObject", Track::class.java)
         if (trackItem == null) {
             requireActivity().onBackPressedDispatcher.onBackPressed()
@@ -137,20 +136,5 @@ class TitleFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         viewModel.onPause()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.onCleared()
-    }
-
-    companion object {
-        fun newInstance(track: Track): TitleFragment {
-            return TitleFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable("trackObject", track)
-                }
-            }
-        }
     }
 }

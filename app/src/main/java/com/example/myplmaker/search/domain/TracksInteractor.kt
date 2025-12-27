@@ -2,11 +2,9 @@ package com.example.myplmaker.search.domain
 
 
 import com.example.myplmaker.search.domain.model.Track
+import kotlinx.coroutines.flow.Flow
 
 interface TracksInteractor {
 
-    fun searchTracks(text: String, consumer: TracksConsumer)
-    interface TracksConsumer {
-        fun consumer(foundTracks: List<Track>?, error: Int?)
-    }
+    fun searchTracks(text: String) : Flow<Pair<List<Track>?, Int?>>
 }

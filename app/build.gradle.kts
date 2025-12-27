@@ -1,3 +1,4 @@
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -64,5 +65,14 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     //noinspection GradleDependency
     implementation(libs.androidx.fragment.ktx)
+    // Зависимость на RxJava
+    implementation(libs.rxjava)
+// Зависимость на RxAndroid
+    implementation(libs.rxandroid)
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android.v139)
+
+
 }
+
 
