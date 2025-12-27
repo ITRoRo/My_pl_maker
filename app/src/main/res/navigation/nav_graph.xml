@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_mediaFragment_to_settingFragment"
             app:destination="@id/settingFragment" />
+        <action
+            android:id="@+id/action_mediaFragment_to_titleFragment"
+            app:destination="@id/titleFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"

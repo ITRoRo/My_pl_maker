@@ -1,5 +1,7 @@
 package com.example.myplmaker.di
 
+import com.example.myplmaker.media.ui.domain.FavoritesInteractor
+import com.example.myplmaker.media.ui.domain.impli.FavoritesInteractorImpl
 import com.example.myplmaker.player.domain.PlayerInteractor
 import com.example.myplmaker.player.domain.impl.PlayerInteractorImpl
 import com.example.myplmaker.search.domain.TracksInteractor
@@ -26,5 +28,9 @@ val interactorModule = module {
     }
     single<SettingInteractor> {
         SettingInteractorImpl(get())
+    }
+
+    single<FavoritesInteractor> {
+        FavoritesInteractorImpl(get())
     }
 }

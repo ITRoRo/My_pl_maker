@@ -1,14 +1,11 @@
 package com.example.myplmaker.player.ui.view
 
-import android.content.Context
 import android.icu.text.SimpleDateFormat
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.myplmaker.media.ui.domain.FavoritesInteractor
 import com.example.myplmaker.player.domain.PlayerInteractor
 import com.example.myplmaker.player.ui.PlayerState
 import com.example.myplmaker.player.ui.TrackUiState
@@ -18,10 +15,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-class TitleViewModel(private val playerInteractor: PlayerInteractor) : ViewModel() {
+class TitleViewModel(private val playerInteractor: PlayerInteractor,  private val favoritesInteractor: FavoritesInteractor) : ViewModel() {
 
     private val _uiState = MutableLiveData<TrackUiState>()
     val uiState: LiveData<TrackUiState> = _uiState
+    private val _isFavorite = MutableLiveData<Boolean>()
+    val isFavorite: LiveData<Boolean> get() = _isFavorite
 
     private lateinit var currentTrack: Track
     private var currentState = PlayerState.DEFAULT
@@ -31,10 +30,26 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor) : ViewModel
         private const val POSITION_UPDATE_DELAY = 1000L
           }
 
+
+    fun onFavoriteClicked() {
+        val favorite = _isFavorite.value ?: false
+        if (favorite) {
+            viewModelScope.launch {
+                favoritesInteractor.deleteTrack(currentTrack)
+            }
+        } else {
+            viewModelScope.launch {
+                favoritesInteractor.addTrack(currentTrack)
+            }
+        }
+        _isFavorite.value = !favorite
+        currentTrack.isFavorite = !favorite
+    }
+
     fun initTrack(track: Track) {
         currentTrack = track
         _uiState.value = TrackUiState(track, PlayerState.DEFAULT)
-
+        _isFavorite.value = track.isFavorite
         preparePlayer()
     }
 

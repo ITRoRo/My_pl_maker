@@ -3,6 +3,8 @@ package com.example.myplmaker.di
 import android.content.Context
 import android.content.SharedPreferences
 import android.media.MediaPlayer
+import androidx.room.Room
+import com.example.myplmaker.db.AppDatabase
 import com.example.myplmaker.search.data.impl.SharedPreferencesHistoryImpl
 import com.example.myplmaker.search.data.network.ITunesApi
 import com.example.myplmaker.search.data.network.NetworkClient
@@ -43,7 +45,18 @@ val dataModule = module {
     single<HistoryInterface> {
         SharedPreferencesHistoryImpl(
             sharedPreferences = get(),
-            gson = get()
+            gson = get(),
+            appDatabase = get()
+
         )
     }
+    single {
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
+            .build()
+    }
+
+    single {
+        get<AppDatabase>().favoriteTrackDao()
+    }
+
 }

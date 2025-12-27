@@ -18,14 +18,12 @@ import com.example.myplmaker.player.ui.TrackUiState
 import com.example.myplmaker.player.ui.view.TitleViewModel
 import com.example.myplmaker.search.domain.model.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 class TitleFragment : Fragment() {
 
     private lateinit var binding: FragmentTitleTreckBinding
-    private val viewModel: TitleViewModel by viewModel{
-        parametersOf(requireActivity())
-    }
+    private val viewModel: TitleViewModel by viewModel()
+
     private var trackItem: Track? = null
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -55,6 +53,18 @@ class TitleFragment : Fragment() {
         setupUI(trackItem!!)
         viewModel.initTrack(trackItem!!)
         observeViewModel()
+
+        binding.buttonHeart.setOnClickListener {
+            viewModel.onFavoriteClicked()
+        }
+
+        viewModel.isFavorite.observe(viewLifecycleOwner) { isFavorite ->
+            if (isFavorite) {
+                binding.buttonHeart.setImageResource(R.drawable.likee_red)
+            } else {
+                binding.buttonHeart.setImageResource(R.drawable.likee)
+            }
+        }
     }
 
     private fun setupUI(track: Track) {

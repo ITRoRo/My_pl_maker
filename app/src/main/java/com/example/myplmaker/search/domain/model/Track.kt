@@ -14,7 +14,8 @@ data class Track(
     val releaseDate: String?, //Год
     val primaryGenreName: String?, //Жанр
     val country: String?,
-    val previewUrl: String?//Страна
+    val previewUrl: String?,//Страна
+    var isFavorite: Boolean = false
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(

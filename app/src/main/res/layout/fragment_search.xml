@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/sixteen_dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="@dimen/fourteen_dp"
             android:fontFamily="@font/ys_display_medium"
             android:gravity="center_vertical"
             android:paddingBottom="@dimen/sixteen_dp"
@@ -38,14 +38,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="@dimen/sixteen_dp"
-        android:paddingVertical="8dp">
+        android:paddingVertical="@dimen/eight_dp">
         <EditText
             android:id="@+id/input_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/beck"
             android:drawableStart="@drawable/search_16"
-            android:drawablePadding="8dp"
+            android:drawablePadding="@dimen/eight_dp"
             android:fontFamily="@font/ys_display_regular"
             android:hint="@string/search_name"
             android:imeOptions="actionDone"
@@ -53,7 +53,7 @@
             android:maxLength="100"
             android:maxLines="1"
             android:padding="8.5dp"
-            android:paddingStart="12dp"
+            android:paddingStart="@dimen/twelve_dp"
             android:singleLine="true"
             android:textColor="@color/black_text"
             android:textColorHint="@color/color_search_text"
@@ -65,16 +65,17 @@
 
             />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/clear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginStart="@dimen/sixteen_dp"
             android:importantForAccessibility="no"
-            android:padding="12dp"
+            android:padding="@dimen/twelve_dp"
             android:src="@drawable/clear"
             android:visibility="gone"
+            android:background="@android:color/transparent"
             app:tint="@color/color_search_16" />
 
 
