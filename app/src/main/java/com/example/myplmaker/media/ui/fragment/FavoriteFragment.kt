@@ -40,6 +40,7 @@ class FavoriteFragment : Fragment() {
         viewModel.state.observe(viewLifecycleOwner) {
             render(it)
         }
+        viewModel.loadFavoriteTracks()
     }
 
     private fun setupRecyclerView() {

@@ -25,15 +25,15 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor,  private va
     private lateinit var currentTrack: Track
     private var currentState = PlayerState.DEFAULT
     private var positionUpdateJob: Job? = null
-
+    private var favoriteJob: Job? = null
     companion object {
         private const val POSITION_UPDATE_DELAY = 1000L
           }
 
 
     fun onFavoriteClicked() {
-        val favorite = _isFavorite.value ?: false
-        if (favorite) {
+      //  val favorite = _isFavorite.value ?: false
+        if (currentTrack.isFavorite) {
             viewModelScope.launch {
                 favoritesInteractor.deleteTrack(currentTrack)
             }
@@ -42,14 +42,25 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor,  private va
                 favoritesInteractor.addTrack(currentTrack)
             }
         }
-        _isFavorite.value = !favorite
-        currentTrack.isFavorite = !favorite
+       // _isFavorite.value = !favorite
+      //  currentTrack.isFavorite = !favorite
+    }
+    override fun onCleared() {
+        super.onCleared()
+        favoriteJob?.cancel()
     }
 
     fun initTrack(track: Track) {
         currentTrack = track
         _uiState.value = TrackUiState(track, PlayerState.DEFAULT)
-        _isFavorite.value = track.isFavorite
+        favoriteJob?.cancel()
+        favoriteJob = viewModelScope.launch {
+            favoritesInteractor.isTrackFavorite(currentTrack.trackId)
+                .collect { isFavorite ->
+                    _isFavorite.postValue(isFavorite)
+                    currentTrack.isFavorite = isFavorite
+                }
+        }
         preparePlayer()
     }
 

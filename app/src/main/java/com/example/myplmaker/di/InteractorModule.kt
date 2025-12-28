@@ -19,18 +19,18 @@ val interactorModule = module {
         PlayerInteractorImpl(get())
     }
 
-    single<TracksInteractor> {
+    factory<TracksInteractor> {
         TracksInteractorImpl(get())
     }
 
-    single<SharingInteractor> {
+    factory<SharingInteractor> {
         SharingInteractorImpl(get(), androidContext())
     }
-    single<SettingInteractor> {
+    factory<SettingInteractor> {
         SettingInteractorImpl(get())
     }
 
-    single<FavoritesInteractor> {
+    factory<FavoritesInteractor> {
         FavoritesInteractorImpl(get())
     }
 }
