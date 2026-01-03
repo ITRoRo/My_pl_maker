@@ -1,13 +1,16 @@
 package com.example.myplmaker.search.data.impl
 
 import android.content.SharedPreferences
+import com.example.myplmaker.db.AppDatabase
 import com.example.myplmaker.search.domain.model.Track
 import com.google.gson.Gson
 import com.practicum.playlistmaker.search.data.HistoryInterface
+import kotlinx.coroutines.runBlocking
 
 class SharedPreferencesHistoryImpl(
     private val sharedPreferences: SharedPreferences,
-    private val gson: Gson
+    private val gson: Gson,
+    private val appDatabase: AppDatabase
 ) : HistoryInterface {
 
     companion object {
@@ -19,7 +22,12 @@ class SharedPreferencesHistoryImpl(
         val json = sharedPreferences.getString(HISTORY_KEY, "[]") ?: "[]"
         return try {
             val array = gson.fromJson(json, Array<Track>::class.java)
-            ArrayList(array.toList())
+         //   val favoriteIds = runBlocking { appDatabase.favoriteTrackDao().getFavoriteTrackIds() }
+
+            val updatedHistory = ArrayList(array.map { track ->
+                track/*.apply { isFavorite = favoriteIds.contains(track.trackId) }*/
+            })
+            updatedHistory
         } catch (e: Exception) {
             ArrayList()
         }

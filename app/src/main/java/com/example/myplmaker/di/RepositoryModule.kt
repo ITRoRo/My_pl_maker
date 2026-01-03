@@ -1,5 +1,8 @@
 package com.example.myplmaker.di
 
+import com.example.myplmaker.db.convertor.TrackDbConvertor
+import com.example.myplmaker.media.ui.data.FavoritesRepositoryImpl
+import com.example.myplmaker.media.ui.domain.FavoritesRepository
 import com.example.myplmaker.player.data.impl.PlayerRepositoryImpl
 import com.example.myplmaker.player.domain.PlayerRepository
 import com.example.myplmaker.search.data.impl.TracksRepositoryImpl
@@ -18,7 +21,7 @@ val repositoryModule = module {
     }
 
     factory<TracksRepository> {
-        TracksRepositoryImpl(get())
+        TracksRepositoryImpl(get(), get())
     }
 
     factory<SettingRepository> {
@@ -27,5 +30,11 @@ val repositoryModule = module {
 
     factory<SharingRepository> {
         SharingRepositoryImpl(androidContext())
+    }
+
+    factory { TrackDbConvertor() }
+
+    factory<FavoritesRepository> {
+        FavoritesRepositoryImpl(get(), get())
     }
 }

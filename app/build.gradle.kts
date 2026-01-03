@@ -2,6 +2,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.devtools.ksp") version "1.9.10-1.0.13"
 
 }
 
@@ -38,8 +39,11 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-}
 
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+}
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -72,7 +76,10 @@ dependencies {
     // Coroutines
     implementation(libs.kotlinx.coroutines.android.v139)
 
-
+    val room_version = "2.5.1"
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 }
 
 
