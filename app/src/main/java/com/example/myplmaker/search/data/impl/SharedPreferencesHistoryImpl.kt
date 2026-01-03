@@ -22,10 +22,10 @@ class SharedPreferencesHistoryImpl(
         val json = sharedPreferences.getString(HISTORY_KEY, "[]") ?: "[]"
         return try {
             val array = gson.fromJson(json, Array<Track>::class.java)
-         //   val favoriteIds = runBlocking { appDatabase.favoriteTrackDao().getFavoriteTrackIds() }
+
 
             val updatedHistory = ArrayList(array.map { track ->
-                track/*.apply { isFavorite = favoriteIds.contains(track.trackId) }*/
+                track
             })
             updatedHistory
         } catch (e: Exception) {

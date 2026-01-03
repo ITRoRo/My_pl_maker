@@ -75,7 +75,7 @@ dependencies {
     implementation(libs.rxandroid)
     // Coroutines
     implementation(libs.kotlinx.coroutines.android.v139)
-
+    implementation(libs.androidx.lifecycle.livedata.ktx)
     val room_version = "2.5.1"
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)

@@ -21,7 +21,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient,
         when (response.resultCode) {
             -1 -> emit(Answers.Error(-1))
             200 -> {
-              //  val favoriteIds = trackDao.getFavoriteTrackIds()
+
                 with(response as TrackSearchResponse) {
                     val data = response.results.map {
                         Track(
@@ -35,9 +35,7 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient,
                             it.primaryGenreName, //Жанр
                             it.country,
                             it.previewUrl
-                        )/*.apply {
-                            isFavorite = favoriteIds.contains(it.trackId)
-                        }*/
+                        )
                     }
                     emit(Answers.Success(data))
                 }
