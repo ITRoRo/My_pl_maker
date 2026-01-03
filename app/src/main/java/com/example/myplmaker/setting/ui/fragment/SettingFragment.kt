@@ -33,14 +33,6 @@ class SettingFragment : Fragment() {
             viewModel.switchTheme(isChecked)
         }
 
-    /*  binding.themeSwitcher.apply {
-            viewModel.switchThemeLD().observe(this@SettingActivity) {
-                isChecked = it.darkTheme
-                setOnCheckedChangeListener { _, _ ->
-                    viewModel.switchTheme(isChecked)
-                }
-            }
-        }*/
 
         binding.share.setOnClickListener {
             viewModel.buttonShare()
