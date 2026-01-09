@@ -23,27 +23,23 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor,
     ) : ViewModel() {
 
     private val _uiState = MutableLiveData<TrackUiState>()
-    val uiState: LiveData<TrackUiState> = _uiState
-
-    private val _isFavorite = MutableLiveData<Boolean>()
-    val isFavorite: LiveData<Boolean> get() = _isFavorite
-
-    private val _playlists = MutableLiveData<List<Playlist>>()
-    val playlists: LiveData<List<Playlist>> get() = _playlists
+    val uiState: LiveData<TrackUiState> get() = _uiState
 
     private val _toastMessage = MutableLiveData<String>()
     val toastMessage: LiveData<String> get() = _toastMessage
-    init {
-        loadPlaylists()
-    }
+
 
     private lateinit var currentTrack: Track
-    private var currentState = PlayerState.DEFAULT
     private var positionUpdateJob: Job? = null
     private var favoriteJob: Job? = null
     companion object {
         private const val POSITION_UPDATE_DELAY = 1000L
           }
+
+    init {
+        _uiState.value = TrackUiState(track = null)
+        loadPlaylists()
+    }
 
 
     fun onFavoriteClicked() {
@@ -59,17 +55,19 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor,
     }
     override fun onCleared() {
         super.onCleared()
+        playerInteractor.releaseResources()
         favoriteJob?.cancel()
+        stopPositionUpdateCoroutine()
     }
 
     fun initTrack(track: Track) {
         currentTrack = track
-        _uiState.value = TrackUiState(track, PlayerState.DEFAULT)
+        _uiState.value = _uiState.value?.copy(track=track)
         favoriteJob?.cancel()
         favoriteJob = viewModelScope.launch {
             favoritesInteractor.isTrackFavorite(currentTrack.trackId)
                 .collect { isFavorite ->
-                    _isFavorite.postValue(isFavorite)
+                    _uiState.postValue(_uiState.value?.copy(isFavorite = isFavorite))
                     currentTrack.isFavorite = isFavorite
                 }
         }
@@ -80,7 +78,6 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor,
         playerInteractor.prepareTrack(
             currentTrack,
             onPrepared = {
-                currentState = PlayerState.PREPARED
                 _uiState.postValue(_uiState.value?.copy(playerState = PlayerState.PREPARED))
             },
             onCompletion = {
@@ -93,7 +90,7 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor,
         stopPositionUpdateCoroutine()
 
         positionUpdateJob = viewModelScope.launch {
-            while (currentState == PlayerState.PLAYING) {
+            while (_uiState.value?.playerState == PlayerState.PLAYING) {
                 updateCurrentPosition()
                 delay(POSITION_UPDATE_DELAY)
             }
@@ -116,7 +113,7 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor,
     }
 
     fun playbackControl() {
-        when (currentState) {
+        when (_uiState.value?.playerState) {
             PlayerState.PLAYING -> pausePlayer()
             PlayerState.PREPARED, PlayerState.PAUSED -> startPlayer()
             else -> {}
@@ -125,8 +122,8 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor,
 
     private fun loadPlaylists() {
         viewModelScope.launch {
-            playlistInteractor.getPlaylists().collect {
-                _playlists.postValue(it)
+            playlistInteractor.getPlaylists().collect { playlists ->
+                _uiState.postValue(_uiState.value?.copy(playlists = playlists))
             }
         }
     }
@@ -145,14 +142,12 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor,
 
     private fun startPlayer() {
         playerInteractor.playTrack()
-        currentState = PlayerState.PLAYING
         _uiState.value = _uiState.value?.copy(playerState = PlayerState.PLAYING)
         startPositionUpdateCoroutine()
     }
 
     private fun pausePlayer() {
         playerInteractor.pauseTrack()
-        currentState = PlayerState.PAUSED
         _uiState.value = _uiState.value?.copy(playerState = PlayerState.PAUSED)
         stopPositionUpdateCoroutine()
     }
@@ -160,7 +155,6 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor,
     private fun resetPlayer() {
         stopPositionUpdateCoroutine()
 
-        currentState = PlayerState.PREPARED
         _uiState.postValue(
             _uiState.value?.copy(
                 playerState = PlayerState.PREPARED,
@@ -171,7 +165,7 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor,
 
     fun onPause() {
         stopPositionUpdateCoroutine()
-        if (currentState == PlayerState.PLAYING) {
+        if (_uiState.value?.playerState == PlayerState.PLAYING) {
             pausePlayer()
         }
     }

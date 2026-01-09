@@ -57,23 +57,16 @@ class TitleFragment : Fragment() {
             return
         }
 
-        setupUI(trackItem!!)
+
         viewModel.initTrack(trackItem!!)
+        initBottomSheet()
         observeViewModel()
 
         binding.buttonHeart.setOnClickListener {
             viewModel.onFavoriteClicked()
         }
 
-        viewModel.isFavorite.observe(viewLifecycleOwner) { isFavorite ->
-            if (isFavorite) {
-                binding.buttonHeart.setImageResource(R.drawable.likee_red)
-            } else {
-                binding.buttonHeart.setImageResource(R.drawable.likee)
-            }
-        }
 
-        initBottomSheet()
 
         binding.buttonPlus.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -125,14 +118,27 @@ class TitleFragment : Fragment() {
             .into(binding.trackAva)
     }
 
+    private fun updateFavoriteIcon(isFavorite: Boolean) {
+        if (isFavorite) {
+            binding.buttonHeart.setImageResource(R.drawable.likee_red)
+        } else {
+            binding.buttonHeart.setImageResource(R.drawable.likee)
+        }
+    }
+
     private fun observeViewModel() {
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
             updatePlayerUI(state)
+            updateFavoriteIcon(state.isFavorite)
+            bottomSheetAdapter?.updateData(state.playlists)
+            state.track?.let { track ->
+                if (binding.titleTrack.text != track.trackName) {
+                    setupUI(track)
+                }
+            }
         }
 
-        viewModel.playlists.observe(viewLifecycleOwner) { playlists ->
-            bottomSheetAdapter?.updateData(playlists)
-        }
+
 
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
