@@ -1,4 +1,3 @@
-
 package com.example.myplmaker.playlist.ui
 
 import android.view.LayoutInflater
@@ -14,6 +13,7 @@ import com.example.myplmaker.playlist.domain.model.Playlist
 class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>() {
 
     private var playlists: List<Playlist> = emptyList()
+    var onItemClick: ((Playlist) -> Unit)? = null
 
     fun updateData(newPlaylists: List<Playlist>) {
         playlists = newPlaylists
@@ -30,7 +30,11 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>
     }
 
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
-        holder.bind(playlists[position])
+        val playlist = playlists[position]
+        holder.bind(playlist)
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(playlist)
+        }
     }
 
     override fun getItemCount(): Int = playlists.size
@@ -41,12 +45,10 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>
         fun bind(playlist: Playlist) {
             binding.playlistNameTextView.text = playlist.name
 
-
             val trackCountText = itemView.resources.getQuantityString(
                 R.plurals.tracks_plurals, playlist.trackCount, playlist.trackCount
             )
             binding.trackCountTextView.text = trackCountText
-
 
             Glide.with(itemView.context)
                 .load(playlist.coverImagePath)

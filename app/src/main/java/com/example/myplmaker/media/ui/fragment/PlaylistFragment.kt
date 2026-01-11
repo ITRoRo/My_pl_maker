@@ -12,6 +12,7 @@ import com.example.myplmaker.R
 import com.example.myplmaker.databinding.FragmentPlayBinding
 import com.example.myplmaker.media.ui.view.PlaylistsScreenState
 import com.example.myplmaker.media.ui.view.PlaylistsViewModel
+import com.example.myplmaker.playlist.fragment.PlaylistDetailsFragment
 import com.example.myplmaker.playlist.ui.PlaylistAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -31,10 +32,19 @@ class PlaylistFragment : Fragment() {
         _binding = FragmentPlayBinding.inflate(inflater, container, false)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         playlistAdapter = PlaylistAdapter()
+        playlistAdapter?.onItemClick = { playlist ->
+            findNavController().navigate(
+                R.id.action_mediaFragment_to_playlistDetailsFragment,
+                Bundle().apply {
+                    putInt(PlaylistDetailsFragment.PLAYLIST_ID, playlist.id)
+                }
+            )
+        }
         binding.playlistsRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.playlistsRecyclerView.adapter = playlistAdapter
 
@@ -58,6 +68,7 @@ class PlaylistFragment : Fragment() {
                 binding.playlistsRecyclerView.isVisible = false
                 binding.placeholderEmpty.isVisible = true
             }
+
             is PlaylistsScreenState.Content -> {
                 binding.playlistsRecyclerView.isVisible = true
                 binding.placeholderEmpty.isVisible = false
