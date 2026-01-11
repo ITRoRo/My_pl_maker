@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/sixteen_dp"
+    android:paddingVertical="@dimen/eight_dp">
+
+    <ImageView
+        android:id="@+id/cover_image_view"
+        android:layout_width="@dimen/forty_five_dp"
+        android:layout_height="@dimen/forty_five_dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/placeholder"
+        android:contentDescription="@string/playlists"/>
+
+    <LinearLayout
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/eight_dp">
+
+        <TextView
+            android:id="@+id/playlist_name_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_FF_B22"
+            android:textSize="@dimen/sixteen_sp"
+            tools:text="..."/>
+
+        <TextView
+            android:id="@+id/track_count_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray_text"
+            android:textSize="@dimen/twelve_sp"
+            tools:text="..."/>
+    </LinearLayout>
+</LinearLayout>

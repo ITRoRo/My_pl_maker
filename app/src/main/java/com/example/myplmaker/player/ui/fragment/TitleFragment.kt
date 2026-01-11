@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -16,13 +18,18 @@ import com.example.myplmaker.databinding.FragmentTitleTreckBinding
 import com.example.myplmaker.player.ui.PlayerState
 import com.example.myplmaker.player.ui.TrackUiState
 import com.example.myplmaker.player.ui.view.TitleViewModel
+import com.example.myplmaker.playlist.ui.BottomSheetPlaylistsAdapter
 import com.example.myplmaker.search.domain.model.Track
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TitleFragment : Fragment() {
 
     private lateinit var binding: FragmentTitleTreckBinding
     private val viewModel: TitleViewModel by viewModel()
+
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+    private var bottomSheetAdapter: BottomSheetPlaylistsAdapter? = null
 
     private var trackItem: Track? = null
 
@@ -50,21 +57,26 @@ class TitleFragment : Fragment() {
             return
         }
 
-        setupUI(trackItem!!)
+
         viewModel.initTrack(trackItem!!)
+        initBottomSheet()
         observeViewModel()
 
         binding.buttonHeart.setOnClickListener {
             viewModel.onFavoriteClicked()
         }
 
-        viewModel.isFavorite.observe(viewLifecycleOwner) { isFavorite ->
-            if (isFavorite) {
-                binding.buttonHeart.setImageResource(R.drawable.likee_red)
-            } else {
-                binding.buttonHeart.setImageResource(R.drawable.likee)
-            }
+
+
+        binding.buttonPlus.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
+
+        binding.newPlaylistBsButton.setOnClickListener {
+            findNavController().navigate(R.id.action_titleFragment_to_newPlaylistFragment)
+        }
+
+
     }
 
     private fun setupUI(track: Track) {
@@ -106,10 +118,57 @@ class TitleFragment : Fragment() {
             .into(binding.trackAva)
     }
 
+    private fun updateFavoriteIcon(isFavorite: Boolean) {
+        if (isFavorite) {
+            binding.buttonHeart.setImageResource(R.drawable.likee_red)
+        } else {
+            binding.buttonHeart.setImageResource(R.drawable.likee)
+        }
+    }
+
     private fun observeViewModel() {
         viewModel.uiState.observe(viewLifecycleOwner) { state ->
             updatePlayerUI(state)
+            updateFavoriteIcon(state.isFavorite)
+            bottomSheetAdapter?.updateData(state.playlists)
+            state.track?.let { track ->
+                if (binding.titleTrack.text != track.trackName) {
+                    setupUI(track)
+                }
+            }
         }
+
+
+
+        viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            if (message.startsWith("Добавлено")) {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            }
+        }
+    }
+
+    private fun initBottomSheet() {
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.playlistsBottomSheet).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        bottomSheetAdapter = BottomSheetPlaylistsAdapter(mutableListOf()) { playlist ->
+            viewModel.onAddTrackToPlaylistClicked(playlist)
+        }
+        binding.playlistsBsRecyclerView.adapter = bottomSheetAdapter
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> binding.overlay.isVisible = false
+                    else -> binding.overlay.isVisible = true
+                }
+            }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                binding.overlay.alpha = slideOffset
+            }
+        })
     }
 
     private fun updatePlayerUI(state: TrackUiState) {
