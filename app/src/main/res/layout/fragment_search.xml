@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/LinearLayout"
-
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".search.ui.fragment.SearchFragment">
 
@@ -186,5 +186,6 @@
         android:layout_height="match_parent"
         android:layout_marginHorizontal="@dimen/twelve_dp"
         android:layout_marginVertical="@dimen/sixteen_dp"
+        android:clipToPadding="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 </LinearLayout>

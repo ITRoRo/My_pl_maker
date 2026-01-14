@@ -13,9 +13,21 @@ interface PlaylistDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlaylist(playlist: PlaylistEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addPlaylist(playlist: PlaylistEntity)
+
     @Update
     suspend fun updatePlaylist(playlist: PlaylistEntity)
 
     @Query("SELECT * FROM playlist_table ORDER BY id DESC")
     fun getPlaylists(): Flow<List<PlaylistEntity>>
+
+    @Query("SELECT * FROM playlist_table WHERE id = :playlistId")
+    fun getPlaylistById(playlistId: Int): Flow<PlaylistEntity?>
+
+    @Query("SELECT * FROM playlist_table")
+    fun getAllPlaylists(): Flow<List<PlaylistEntity>>
+
+    @Query("DELETE FROM playlist_table WHERE id = :playlistId")
+    suspend fun deletePlaylistById(playlistId: Int)
 }

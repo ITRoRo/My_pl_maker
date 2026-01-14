@@ -43,7 +43,7 @@ class TitleFragment : Fragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+  //  @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -51,24 +51,43 @@ class TitleFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        trackItem = arguments?.getParcelable("trackObject", Track::class.java)
-        if (trackItem == null) {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-            return
-        }
+//        trackItem = arguments?.getParcelable("trackObject", Track::class.java)
+//        if (trackItem == null) {
+//            requireActivity().onBackPressedDispatcher.onBackPressed()
+//            return
+//        }
+//
+//
+//        viewModel.initTrack(trackItem!!)
+//        initBottomSheet()
+//        observeViewModel()
+//
+//        binding.buttonHeart.setOnClickListener {
+//            viewModel.onFavoriteClicked()
+//        }
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+          trackItem = arguments?.getParcelable("trackObject", Track::class.java)
+      } else {
+          @Suppress("DEPRECATION")
+          trackItem = arguments?.getParcelable("trackObject")
+      }
 
+      if (trackItem == null) {
+          findNavController().popBackStack()
+          return
+      }
 
-        viewModel.initTrack(trackItem!!)
-        initBottomSheet()
-        observeViewModel()
+      viewModel.initTrack(trackItem!!)
+      initBottomSheet()
+      observeViewModel()
 
-        binding.buttonHeart.setOnClickListener {
-            viewModel.onFavoriteClicked()
-        }
-
+      binding.buttonHeart.setOnClickListener {
+          viewModel.onFavoriteClicked()
+      }
 
 
         binding.buttonPlus.setOnClickListener {
+            binding.overlay.isVisible = true
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
@@ -142,8 +161,8 @@ class TitleFragment : Fragment() {
 
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-            if (message.startsWith("Добавлено")) {
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            val successMessageTemplate = getString(R.string.added)
+            if (message.startsWith(successMessageTemplate)) {                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             }
         }
     }
@@ -160,15 +179,18 @@ class TitleFragment : Fragment() {
 
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> binding.overlay.isVisible = false
-                    else -> binding.overlay.isVisible = true
-                }
+                binding.overlay.isVisible = newState != BottomSheetBehavior.STATE_HIDDEN
             }
+
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding.overlay.alpha = slideOffset
+                                val alpha = (slideOffset + 1) / 2
+                binding.overlay.alpha = alpha
             }
         })
+
+        binding.buttonPlus.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
     }
 
     private fun updatePlayerUI(state: TrackUiState) {

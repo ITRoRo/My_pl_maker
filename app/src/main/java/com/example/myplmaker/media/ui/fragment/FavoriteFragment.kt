@@ -43,8 +43,13 @@ class FavoriteFragment : Fragment() {
         viewModel.loadFavoriteTracks()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadFavoriteTracks()
+    }
+
     private fun setupRecyclerView() {
-        trackAdapter = TrackAdapter(arrayListOf())
+        trackAdapter = TrackAdapter()
         binding.mediaRecyclerView.adapter = trackAdapter
         trackAdapter?.onItemClick = { track ->
             findNavController().navigate(
@@ -69,9 +74,7 @@ class FavoriteFragment : Fragment() {
     private fun showContent(tracks: List<Track>) {
         binding.imageBox.isVisible = false
         binding.mediaRecyclerView.isVisible = true
-        trackAdapter?.trackList?.clear()
-        trackAdapter?.trackList?.addAll(tracks)
-        trackAdapter?.notifyDataSetChanged()
+        trackAdapter?.tracks = tracks.toMutableList()
     }
 
     override fun onDestroyView() {

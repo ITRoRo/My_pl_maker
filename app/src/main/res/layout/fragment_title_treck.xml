@@ -282,7 +282,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#99000000"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:alpha="0.0"/>
 
     <LinearLayout
         android:id="@+id/playlists_bottom_sheet"
@@ -332,7 +333,7 @@
         android:layout_marginTop="@dimen/sixteen_dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/playlist_bottom_sheet_item"
-        tools:itemCount="6"/>
+        tools:itemCount="4"/>
 </LinearLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
