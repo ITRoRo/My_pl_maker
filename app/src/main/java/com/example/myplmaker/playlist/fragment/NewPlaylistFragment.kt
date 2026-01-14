@@ -54,8 +54,8 @@ class NewPlaylistFragment : Fragment() {
         viewModel.init(playlistId)
 
         if (playlistId != -1) {
-            binding.toolbarNewPlaylist.title = "Редактировать"
-            binding.createButton.text = "Сохранить"
+            binding.toolbarNewPlaylist.title = getString(R.string.edit2)
+            binding.createButton.text = getString(R.string.save)
         }
 
         setupListeners()
@@ -93,17 +93,17 @@ class NewPlaylistFragment : Fragment() {
         }
 
         viewModel.finishScreen.observe(viewLifecycleOwner) { playlistName ->
-            Toast.makeText(requireContext(), "Плейлист $playlistName создан", Toast.LENGTH_SHORT)
-                .show()
+            val message = getString(R.string.playlist_created2, playlistName)
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             findNavController().popBackStack()
         }
 
         viewModel.showConfirmDialog.observe(viewLifecycleOwner) {
             MaterialAlertDialogBuilder(requireContext(), R.style.TextTrackView)
-                .setTitle("Завершить создание плейлиста?")
-                .setMessage("Все несохраненные данные будут потеряны")
-                .setNegativeButton("Отмена") { _, _ -> }
-                .setPositiveButton("Завершить") { _, _ ->
+                .setTitle(R.string.finish_creating_playlist)
+                .setMessage(R.string.al_unsaved_data)
+                .setNegativeButton(R.string.cancel2) { _, _ -> }
+                .setPositiveButton(R.string.finish) { _, _ ->
                     findNavController().navigateUp()
                 }
                 .show()

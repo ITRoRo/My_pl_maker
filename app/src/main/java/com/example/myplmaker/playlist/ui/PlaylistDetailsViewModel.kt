@@ -28,7 +28,8 @@ class PlaylistDetailsViewModel(
                     val trackIds = playlist?.trackIds ?: emptyList()
                     playlistInteractor.getTracksForPlaylist(trackIds)
                         .map { tracks ->
-                            val sortedTracks = tracks.reversed()
+                            val tracksById = tracks.associateBy { it.trackId }
+                            val sortedTracks = trackIds.mapNotNull { id -> tracksById[id] }
                             val totalDuration = sortedTracks.sumOf { it.trackTimeMillis }
                             val totalMinutes = if (totalDuration == 0L) 0 else SimpleDateFormat(
                                 "mm",

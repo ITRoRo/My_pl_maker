@@ -87,7 +87,7 @@ class NewPlaylistViewModel(
                     description = playlistDescription.takeIf { it.isNotBlank() },
                     coverImagePath = coverUri?.toString() ?: currentPlaylist!!.coverImagePath
                 )
-                playlistInteractor.addPlaylist(updatedPlaylist)
+                playlistInteractor.updatePlaylist(updatedPlaylist)
                 _closeScreen.postValue(Unit)
             } else {
                 val newPlaylist = Playlist(

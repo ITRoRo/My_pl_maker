@@ -159,6 +159,7 @@ class PlaylistDetailsFragment : Fragment() {
             .into(binding.coverImage)
 
         trackAdapter?.tracks = state.tracks.toMutableList()
+        trackAdapter?.notifyDataSetChanged()
 
         binding.tracksSheetContent.placeholderEmptyTracks.isVisible = state.tracks.isEmpty()
         binding.tracksSheetContent.tracksRecyclerView.isVisible = state.tracks.isNotEmpty()
@@ -182,7 +183,7 @@ class PlaylistDetailsFragment : Fragment() {
         if (state.tracks.isEmpty()) {
             Snackbar.make(
                 binding.root,
-                "В этом плейлисте нет списка треков, которым можно поделиться",
+                getString(R.string.no_track_sharing),
                 Snackbar.LENGTH_SHORT
             ).show()
             return
@@ -193,7 +194,7 @@ class PlaylistDetailsFragment : Fragment() {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, shareText)
         }
-        startActivity(Intent.createChooser(shareIntent, "Поделиться плейлистом"))
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.sgaring_track)))
     }
 
     private fun buildShareText(state: PlaylistDetailsUiState): String {
@@ -219,19 +220,20 @@ class PlaylistDetailsFragment : Fragment() {
 
     private fun showDeleteTrackDialog(trackId: Int) {
         MaterialAlertDialogBuilder(requireContext(), R.style.TextTrackView)
-            .setTitle("Удалить трек")
-            .setMessage("Вы уверены, что хотите удалить этот трек из плейлиста?")
-            .setNegativeButton("Нет") { _, _ -> }
-            .setPositiveButton("Да") { _, _ -> viewModel.deleteTrack(trackId) }
+            .setTitle(R.string.delete_track_title)
+            .setMessage(R.string.delete_this_track_from_the_playlist)
+            .setNegativeButton(R.string.no) { _, _ -> }
+            .setPositiveButton(R.string.yes) { _, _ -> viewModel.deleteTrack(trackId) }
             .show()
     }
 
     private fun showDeletePlaylistDialog() {
+        val playlistName = viewModel.uiState.value?.playlist?.name ?: ""
         MaterialAlertDialogBuilder(requireContext(), R.style.TextTrackView)
-            .setTitle("Удалить плейлист")
-            .setMessage("Хотите удалить плейлист «${viewModel.uiState.value?.playlist?.name}»?")
-            .setNegativeButton("Нет") { _, _ -> }
-            .setPositiveButton("Да") { _, _ -> viewModel.deletePlaylist() }
+            .setTitle(R.string.delete_playlist_title)
+            .setMessage(getString(R.string.delete_playlist_message, playlistName))
+            .setNegativeButton(R.string.no) { _, _ -> }
+            .setPositiveButton(R.string.yes) { _, _ -> viewModel.deletePlaylist() }
             .show()
     }
 

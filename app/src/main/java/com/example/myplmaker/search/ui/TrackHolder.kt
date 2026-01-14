@@ -47,11 +47,13 @@ class TrackHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         trackImage: String?,
         artwor: ImageView,
         placeholder: Int,
-        dp: Float
+        dp: Float,
     ) {
+
         Glide.with(itemView)
             .load(trackImage)
             .placeholder(placeholder)
+            .error(R.drawable.placeholder)
             .transform(RoundedCorners(dpToPx(itemView, dp)))
             .into(artwor)
     }
