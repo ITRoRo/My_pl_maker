@@ -1,5 +1,6 @@
 package com.example.myplmaker.player.ui.fragment
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -43,7 +44,6 @@ class TitleFragment : Fragment() {
         return binding.root
     }
 
-  //  @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -51,20 +51,7 @@ class TitleFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-//        trackItem = arguments?.getParcelable("trackObject", Track::class.java)
-//        if (trackItem == null) {
-//            requireActivity().onBackPressedDispatcher.onBackPressed()
-//            return
-//        }
-//
-//
-//        viewModel.initTrack(trackItem!!)
-//        initBottomSheet()
-//        observeViewModel()
-//
-//        binding.buttonHeart.setOnClickListener {
-//            viewModel.onFavoriteClicked()
-//        }
+
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
           trackItem = arguments?.getParcelable("trackObject", Track::class.java)
       } else {
@@ -98,6 +85,7 @@ class TitleFragment : Fragment() {
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setupUI(track: Track) {
 
 
@@ -111,7 +99,7 @@ class TitleFragment : Fragment() {
         setupAlbumInfo(track)
         setupReleaseDate(track)
         setupAlbumImage(track)
-        binding.buttonPlay.setOnClickListener {
+        binding.buttonPlay.setOnPlaybackClickListener { isPlayingNow ->
             viewModel.playbackControl()
         }
     }
@@ -199,19 +187,22 @@ class TitleFragment : Fragment() {
         when (state.playerState) {
             PlayerState.DEFAULT -> {
                 binding.buttonPlay.isEnabled = false
+                binding.buttonPlay.setPlaying(false)
             }
 
             PlayerState.PREPARED -> {
                 binding.buttonPlay.isEnabled = true
-                binding.buttonPlay.setImageResource(R.drawable.play)
+                binding.buttonPlay.setPlaying(false)
             }
 
             PlayerState.PLAYING -> {
-                binding.buttonPlay.setImageResource(R.drawable.stop)
+                binding.buttonPlay.isEnabled = true
+                binding.buttonPlay.setPlaying(true)
             }
 
             PlayerState.PAUSED -> {
-                binding.buttonPlay.setImageResource(R.drawable.play)
+                binding.buttonPlay.isEnabled = true
+                binding.buttonPlay.setPlaying(false)
             }
         }
     }
