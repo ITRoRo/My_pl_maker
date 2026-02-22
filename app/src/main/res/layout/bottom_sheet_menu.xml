@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/sixteen_dp"
+    >
+
+    <View
+        android:layout_width="@dimen/fifty_dp"
+        android:layout_height="@dimen/for4_dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/eight_dp"
+        android:background="@drawable/bottom_sheet_indicator" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sixteen_dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/sixteen_dp">
+
+        <ImageView
+            android:id="@+id/menu_cover_image"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/placeholder"
+            android:scaleType="centerCrop" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/eight_dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/menu_playlist_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/ys_display_regular"
+                android:maxLines="1"
+                android:textColor="@color/color_FF_B22"
+                android:textSize="@dimen/sixteen_sp"
+                tools:text="Best songs 2021" />
+
+            <TextView
+                android:id="@+id/menu_track_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/ys_display_regular"
+                android:textColor="@color/gray_text"
+                android:textSize="@dimen/twelve_sp"
+                tools:text="98 треков" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/menu_share"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/twenty_four_dp"
+        android:fontFamily="@font/ys_display_regular"
+        android:paddingHorizontal="@dimen/sixteen_dp"
+        android:paddingVertical="@dimen/twelve_dp"
+        android:text="@string/impart"
+        android:textColor="@color/color_FF_B22"
+        android:textSize="@dimen/sixteen_sp" />
+
+    <TextView
+        android:id="@+id/menu_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ys_display_regular"
+        android:paddingHorizontal="@dimen/sixteen_dp"
+        android:paddingVertical="@dimen/twelve_dp"
+        android:text="@string/edit"
+        android:textColor="@color/color_FF_B22"
+        android:textSize="@dimen/sixteen_sp" />
+
+    <TextView
+        android:id="@+id/menu_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ys_display_regular"
+        android:paddingHorizontal="@dimen/sixteen_dp"
+        android:paddingVertical="@dimen/twelve_dp"
+        android:text="@string/delete_pl"
+        android:textColor="@color/color_FF_B22"
+        android:textSize="@dimen/sixteen_sp" />
+</LinearLayout>

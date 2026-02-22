@@ -1,10 +1,13 @@
 package com.example.myplmaker.player.ui.view
 
+import android.annotation.SuppressLint
+import android.app.Application
 import android.icu.text.SimpleDateFormat
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myplmaker.R
 import com.example.myplmaker.media.ui.domain.FavoritesInteractor
 import com.example.myplmaker.player.domain.PlayerInteractor
 import com.example.myplmaker.player.ui.PlayerState
@@ -14,13 +17,16 @@ import com.example.myplmaker.playlist.domain.model.Playlist
 import com.example.myplmaker.search.domain.model.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-class TitleViewModel(private val playerInteractor: PlayerInteractor,
+class TitleViewModel(
+                     application: Application,
+                     private val playerInteractor: PlayerInteractor,
                      private val favoritesInteractor: FavoritesInteractor,
                      private val playlistInteractor: PlaylistInteractor
-    ) : ViewModel() {
+    ) : AndroidViewModel(application) {
 
     private val _uiState = MutableLiveData<TrackUiState>()
     val uiState: LiveData<TrackUiState> get() = _uiState
@@ -38,7 +44,7 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor,
 
     init {
         _uiState.value = TrackUiState(track = null)
-        loadPlaylists()
+
     }
 
 
@@ -62,7 +68,29 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor,
 
     fun initTrack(track: Track) {
         currentTrack = track
-        _uiState.value = _uiState.value?.copy(track=track)
+        viewModelScope.launch {
+            val playlists = playlistInteractor.getPlaylists().firstOrNull() ?: emptyList()
+
+            val isFavorite = favoritesInteractor.isTrackFavorite(track.trackId).firstOrNull() ?: false
+            currentTrack.isFavorite = isFavorite
+
+            _uiState.postValue(
+                TrackUiState(
+                    track = track,
+                    playerState = PlayerState.DEFAULT,
+                    isFavorite = isFavorite,
+                    playlists = playlists
+                )
+            )
+
+            listenForFavoriteChanges()
+            listenForPlaylistChanges()
+
+            preparePlayer()
+        }
+    }
+
+    private fun listenForFavoriteChanges() {
         favoriteJob?.cancel()
         favoriteJob = viewModelScope.launch {
             favoritesInteractor.isTrackFavorite(currentTrack.trackId)
@@ -71,7 +99,14 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor,
                     currentTrack.isFavorite = isFavorite
                 }
         }
-        preparePlayer()
+    }
+
+    private fun listenForPlaylistChanges() {
+        viewModelScope.launch {
+            playlistInteractor.getPlaylists().collect { playlists ->
+                _uiState.postValue(_uiState.value?.copy(playlists = playlists))
+            }
+        }
     }
 
     private fun preparePlayer() {
@@ -128,14 +163,16 @@ class TitleViewModel(private val playerInteractor: PlayerInteractor,
         }
     }
 
+    @SuppressLint("StringFormatInvalid")
     fun onAddTrackToPlaylistClicked(playlist: Playlist) {
         viewModelScope.launch {
             val isAdded = playlistInteractor.addTrackToPlaylist(currentTrack, playlist)
             if (isAdded) {
-                _toastMessage.postValue("Добавлено в плейлист ${playlist.name}")
+                val message = getApplication<Application>().getString(R.string.add_in_pl_to, playlist.name)
+                _toastMessage.postValue(message)
             } else {
-                _toastMessage.postValue("Трек уже добавлен в плейлист ${playlist.name}")
-            }
+                val message = getApplication<Application>().getString(R.string.been_added, playlist.name)
+                _toastMessage.postValue(message)            }
         }
     }
 

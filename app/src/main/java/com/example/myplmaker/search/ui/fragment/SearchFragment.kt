@@ -1,21 +1,14 @@
 package com.example.myplmaker.search.ui.fragment
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.myplmaker.R
@@ -29,14 +22,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.getValue
 
 class SearchFragment : Fragment() {
-    companion object {
-        const val PRODUCT_AMOUNT = "PRODUCT_AMOUNT"
-        const val AMOUNT_DEF = ""
-        private const val CLICK_DEBOUNCE_DELAY = 2000L
-    }
-
-    private var isClickAllowed = true
-    private lateinit var searchDebounceRunnable: Runnable
 
     private val viewModel: SearchViewModel by viewModel()
     private var _binding: FragmentSearchBinding? = null
@@ -83,8 +68,8 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupAdapters() {
-        trackAdapter = TrackAdapter(arrayListOf())
-        historyAdapter = TrackAdapter(arrayListOf())
+        trackAdapter = TrackAdapter()
+        historyAdapter = TrackAdapter()
         binding.recicleView.adapter = trackAdapter
         binding.viewHistory.adapter = historyAdapter
 
@@ -184,15 +169,11 @@ class SearchFragment : Fragment() {
     }
 
     private fun updateTrackList(tracks: List<Track>) {
-        trackAdapter.trackList.clear()
-        trackAdapter.trackList.addAll(tracks)
-        trackAdapter.notifyDataSetChanged()
+        trackAdapter.tracks = tracks.toMutableList()
     }
 
     private fun updateHistoryList(tracks: List<Track>) {
-        historyAdapter.trackList.clear()
-        historyAdapter.trackList.addAll(tracks)
-        historyAdapter.notifyDataSetChanged()
+        historyAdapter.tracks = tracks.toMutableList()
     }
 
     override fun onDestroyView() {
