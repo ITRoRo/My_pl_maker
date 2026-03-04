@@ -1,5 +1,6 @@
 package com.example.myplmaker.player.ui.fragment
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -43,7 +44,6 @@ class TitleFragment : Fragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -51,24 +51,30 @@ class TitleFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        trackItem = arguments?.getParcelable("trackObject", Track::class.java)
-        if (trackItem == null) {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-            return
-        }
 
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+          trackItem = arguments?.getParcelable("trackObject", Track::class.java)
+      } else {
+          @Suppress("DEPRECATION")
+          trackItem = arguments?.getParcelable("trackObject")
+      }
 
-        viewModel.initTrack(trackItem!!)
-        initBottomSheet()
-        observeViewModel()
+      if (trackItem == null) {
+          findNavController().popBackStack()
+          return
+      }
 
-        binding.buttonHeart.setOnClickListener {
-            viewModel.onFavoriteClicked()
-        }
+      viewModel.initTrack(trackItem!!)
+      initBottomSheet()
+      observeViewModel()
 
+      binding.buttonHeart.setOnClickListener {
+          viewModel.onFavoriteClicked()
+      }
 
 
         binding.buttonPlus.setOnClickListener {
+            binding.overlay.isVisible = true
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
@@ -79,6 +85,7 @@ class TitleFragment : Fragment() {
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setupUI(track: Track) {
 
 
@@ -92,7 +99,7 @@ class TitleFragment : Fragment() {
         setupAlbumInfo(track)
         setupReleaseDate(track)
         setupAlbumImage(track)
-        binding.buttonPlay.setOnClickListener {
+        binding.buttonPlay.setOnPlaybackClickListener { isPlayingNow ->
             viewModel.playbackControl()
         }
     }
@@ -142,8 +149,8 @@ class TitleFragment : Fragment() {
 
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-            if (message.startsWith("Добавлено")) {
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            val successMessageTemplate = getString(R.string.added)
+            if (message.startsWith(successMessageTemplate)) {                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             }
         }
     }
@@ -160,15 +167,18 @@ class TitleFragment : Fragment() {
 
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> binding.overlay.isVisible = false
-                    else -> binding.overlay.isVisible = true
-                }
+                binding.overlay.isVisible = newState != BottomSheetBehavior.STATE_HIDDEN
             }
+
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding.overlay.alpha = slideOffset
+                                val alpha = (slideOffset + 1) / 2
+                binding.overlay.alpha = alpha
             }
         })
+
+        binding.buttonPlus.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
     }
 
     private fun updatePlayerUI(state: TrackUiState) {
@@ -177,19 +187,22 @@ class TitleFragment : Fragment() {
         when (state.playerState) {
             PlayerState.DEFAULT -> {
                 binding.buttonPlay.isEnabled = false
+                binding.buttonPlay.setPlaying(false)
             }
 
             PlayerState.PREPARED -> {
                 binding.buttonPlay.isEnabled = true
-                binding.buttonPlay.setImageResource(R.drawable.play)
+                binding.buttonPlay.setPlaying(false)
             }
 
             PlayerState.PLAYING -> {
-                binding.buttonPlay.setImageResource(R.drawable.stop)
+                binding.buttonPlay.isEnabled = true
+                binding.buttonPlay.setPlaying(true)
             }
 
             PlayerState.PAUSED -> {
-                binding.buttonPlay.setImageResource(R.drawable.play)
+                binding.buttonPlay.isEnabled = true
+                binding.buttonPlay.setPlaying(false)
             }
         }
     }
