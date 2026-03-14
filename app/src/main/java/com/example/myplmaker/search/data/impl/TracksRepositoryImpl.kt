@@ -8,7 +8,9 @@ import com.example.myplmaker.search.domain.TracksRepository
 import com.example.myplmaker.search.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import com.example.myplmaker.db.AppDatabase
 import com.example.myplmaker.db.dao.TrackDao
+
 
 class TracksRepositoryImpl(private val networkClient: NetworkClient,
                            private val trackDao: TrackDao
@@ -23,14 +25,14 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient,
                 with(response as TrackSearchResponse) {
                     val data = response.results.map {
                         Track(
-                            it.trackName.toString(),
-                            it.artistName,
-                            it.trackTimeMillis,
+                            it.trackName.toString(), // Название композиции
+                            it.artistName, // Имя исполнителя
+                            it.trackTimeMillis, // Продолжительность трека
                             it.artworkUrl100,
-                            it.trackId,
-                            it.collectionName,
-                            it.releaseDate,
-                            it.primaryGenreName,
+                            it.trackId,// Ссылка
+                            it.collectionName, //Альбома
+                            it.releaseDate, //Год
+                            it.primaryGenreName, //Жанр
                             it.country,
                             it.previewUrl
                         )
