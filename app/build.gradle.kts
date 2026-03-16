@@ -1,9 +1,10 @@
+import org.gradle.kotlin.dsl.debugImplementation
+import org.gradle.kotlin.dsl.implementation
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("com.google.devtools.ksp") version "1.9.10-1.0.13"
-
+    id("com.google.devtools.ksp") version "1.9.25-1.0.20"
 }
 
 android {
@@ -31,18 +32,25 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        compose = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
 
-ksp {
-    arg("room.schemaLocation", "$projectDir/schemas")
-}
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.15"
+    }
+
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
 }
 dependencies {
 
@@ -52,14 +60,15 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.ui.text.android)
+    implementation(libs.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation (libs.google.material.v161)
-    implementation (libs.glide)
-    annotationProcessor (libs.compiler)
-    implementation (libs.gson)
-    implementation (libs.retrofit)
+    implementation(libs.google.material.v161)
+    implementation(libs.glide)
+    annotationProcessor(libs.compiler)
+    implementation(libs.gson)
+    implementation(libs.retrofit)
     implementation(libs.retrofit2.converter.gson)
     implementation(libs.material.v180)
     //noinspection GradleDependency
@@ -71,16 +80,22 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
     // Зависимость на RxJava
     implementation(libs.rxjava)
-// Зависимость на RxAndroid
     implementation(libs.rxandroid)
-    // Coroutines
     implementation(libs.kotlinx.coroutines.android.v139)
     implementation(libs.androidx.lifecycle.livedata.ktx)
-    val room_version = "2.5.1"
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx.v270)
+
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.material)
+    implementation(libs.androidx.activity.compose)
+    debugImplementation(libs.ui.tooling)
+    implementation(libs.accompanist.pager)
+    implementation(libs.coil.compose)
+
 }
 
 

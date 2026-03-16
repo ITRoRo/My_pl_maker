@@ -6,17 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.myplmaker.setting.domain.SettingInteractor
 import com.example.myplmaker.setting.domain.model.ThemeSetting
-import com.example.myplmaker.sharing.domain.SharingInteractor
 
 class SettingViewModel(
 
     private val settingsInteractor: SettingInteractor,
-    private val sharingInteractor: SharingInteractor,
 
 ) : ViewModel() {
 
     private val themeLiveData = MutableLiveData<ThemeSetting>()
-    fun switchThemeLD(): LiveData<ThemeSetting> = themeLiveData
+    val switchThemeLD: LiveData<ThemeSetting> = themeLiveData
 
     init {
         themeLiveData.value = settingsInteractor.switchTheme()
@@ -34,22 +32,4 @@ class SettingViewModel(
             }
         )
     }
-
-
-
-
-    fun buttonShare() {
-        sharingInteractor.buttonShare()
-    }
-
-    fun buttonSupport() {
-        sharingInteractor.buttonSupport()
-    }
-
-    fun buttonConsent() {
-        sharingInteractor.buttonConsent()
-    }
-    fun getLiveData() : LiveData<ThemeSetting> = themeLiveData
-
-
 }

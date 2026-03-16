@@ -1,5 +1,9 @@
 [versions]
+accompanistPager = "0.34.0"
+activityCompose = "<version>"
 agp = "8.13.2"
+androidxMaterial = "<version>"
+coilCompose = "2.6.0"
 compiler = "8.11"
 converterGson = "2.9.0"
 fragmentKtx = "1.8.9"
@@ -12,7 +16,7 @@ insertKoinKoinAndroid = "3.4.0"
 koinAndroid = "4.1.1"
 koinAndroidVersion = "3.5.0"
 koinAndroidxViewmodel = "3.4.0"
-kotlin = "1.9.0"
+kotlin = "1.9.25"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -27,27 +31,46 @@ material = "1.12.0"
 activity = "1.10.1"
 constraintlayout = "2.2.1"
 materialVersion = "1.12.0"
+navigationCompose = "2.9.7"
 navigationFragmentKtx = "2.9.5"
 retrofit = "2.9.0"
 roomRuntime = "2.5.1"
 rxandroid = "2.1.1"
 rxjava = "2.2.21"
+ui = "<version>"
 uiTextAndroid = "1.7.8"
+uiTooling = "1.10.5"
 viewpager2 = "1.1.0"
+runtimeLivedata = "1.10.5"
+ksp = "1.9.25-1.0.20"
+
 
 [libraries]
+accompanist-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanistPager" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelKtx" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-ktx-v270 = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+androidx-material = { module = "androidx.compose.material:material", version.ref = "androidxMaterial" }
+androidx-material3 = { module = "androidx.compose.material3:material3" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata" }
+androidx-ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
+androidx-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
+androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
 compiler-v8102 = { module = "com.github.bumptech.glide:compiler", version.ref = "compiler" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
@@ -79,6 +102,9 @@ retrofit2-converter-gson = { module = "com.squareup.retrofit2:converter-gson", v
 androidx-ui-text-android = { group = "androidx.compose.ui", name = "ui-text-android", version.ref = "uiTextAndroid" }
 rxandroid = { module = "io.reactivex.rxjava2:rxandroid", version.ref = "rxandroid" }
 rxjava = { module = "io.reactivex.rxjava2:rxjava", version.ref = "rxjava" }
+ui = { module = "androidx.compose.ui:ui" }
+ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "uiTooling" }
+runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
