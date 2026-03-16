@@ -8,17 +8,9 @@ import com.example.myplmaker.R
 
 import com.example.myplmaker.search.domain.model.Track
 
-class TrackAdapter() : RecyclerView.Adapter<TrackHolder>() {
+class TrackAdapter( val trackList: ArrayList<Track>) : RecyclerView.Adapter<TrackHolder>() {
 
-    var tracks = mutableListOf<Track>()
-    var onItemClick: ((Track) -> Unit)? = null
-    var onLongItemClick: ((Track) -> Boolean)? = null
-
-        @SuppressLint("NotifyDataSetChanged")
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+    var onItemClick: ((trackItem: Track) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_view, parent, false)
@@ -27,17 +19,14 @@ class TrackAdapter() : RecyclerView.Adapter<TrackHolder>() {
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(holder: TrackHolder, position: Int) {
-        val trackItem = tracks[position]
+        val trackItem = trackList[position]
         holder.bind(trackItem)
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(trackItem)
         }
-        holder.itemView.setOnLongClickListener {
-            onLongItemClick?.invoke(trackItem) ?: false
-        }
     }
 
     override fun getItemCount(): Int {
-        return tracks.size
+        return trackList.size
     }
 }

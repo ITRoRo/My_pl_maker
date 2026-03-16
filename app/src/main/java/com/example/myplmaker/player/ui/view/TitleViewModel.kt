@@ -5,8 +5,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myplmaker.R
 import com.example.myplmaker.media.ui.domain.FavoritesInteractor
 import com.example.myplmaker.player.service.AudioPlayerControl
 import com.example.myplmaker.player.ui.PlayerState
@@ -41,7 +41,7 @@ class TitleViewModel(
 
     init {
         _uiState.value = TrackUiState(track = null)
-
+        loadPlaylists()
     }
 
 
@@ -118,14 +118,7 @@ class TitleViewModel(
                     currentTrack.isFavorite = isFavorite
                 }
         }
-    }
-
-    private fun listenForPlaylistChanges() {
-        viewModelScope.launch {
-            playlistInteractor.getPlaylists().collect { playlists ->
-                _uiState.postValue(_uiState.value?.copy(playlists = playlists))
-            }
-        }
+        preparePlayer()
     }
 
 
@@ -141,7 +134,6 @@ class TitleViewModel(
     }
 
 
-    @SuppressLint("StringFormatInvalid")
     fun onAddTrackToPlaylistClicked(playlist: Playlist) {
         viewModelScope.launch {
             val isAdded = playlistInteractor.addTrackToPlaylist(currentTrack, playlist)

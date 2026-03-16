@@ -5,16 +5,16 @@ import android.os.Parcelable
 
 data class Track(
 
-    var trackName: String,
-    var artistName: String,
-    var trackTimeMillis: Long,
+    var trackName: String, // Название композиции
+    var artistName: String, // Имя исполнителя
+    var trackTimeMillis: Long, // Продолжительность трека
     var artworkUrl100: String,
-    val trackId: Int,
-    val collectionName: String?,
-    val releaseDate: String?,
-    val primaryGenreName: String?,
+    val trackId: Int,// Ссылка
+    val collectionName: String?, //Альбома
+    val releaseDate: String?, //Год
+    val primaryGenreName: String?, //Жанр
     val country: String?,
-    val previewUrl: String?,
+    val previewUrl: String?,//Страна
     var isFavorite: Boolean = false
 ) : Parcelable {
 

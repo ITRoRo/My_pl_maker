@@ -2,13 +2,18 @@ package com.example.myplmaker.playlist.fragment
 
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -17,20 +22,26 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.myplmaker.R
 import com.example.myplmaker.databinding.FragmentNewPlaylistBinding
-import com.example.myplmaker.playlist.domain.model.Playlist
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.example.myplmaker.playlist.ui.NewPlaylistViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.io.File
+import java.io.FileOutputStream
 
 class NewPlaylistFragment : Fragment() {
 
     private var _binding: FragmentNewPlaylistBinding? = null
     private val binding get() = _binding!!
     private val viewModel: NewPlaylistViewModel by viewModel()
+
+    private lateinit var confirmDialog: MaterialAlertDialogBuilder
+
+
     private val pickMedia =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
-                viewModel.getCoverUri(uri)
+                viewModel.setCoverUri(uri)
+                binding.coverImage.setImageURI(uri)
                 Glide.with(this)
                     .load(uri)
                     .centerCrop()
@@ -50,22 +61,23 @@ class NewPlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val playlistId = arguments?.getInt(PLAYLIST_ID_KEY) ?: -1
-        viewModel.init(playlistId)
-
-        if (playlistId != -1) {
-            binding.toolbarNewPlaylist.title = getString(R.string.edit2)
-            binding.createButton.text = getString(R.string.save)
-        }
-
+        setupDialog()
         setupListeners()
         setupViewModelObservers()
         setupBackPressed()
     }
 
+    private fun setupDialog() {
+        confirmDialog = MaterialAlertDialogBuilder(requireContext(), R.style.TextTrackView)
+            .setTitle("Завершить создание плейлиста?")
+            .setMessage("Все несохраненные данные будут потеряны")
+            .setNegativeButton("Отмена") { _, _ -> }
+            .setPositiveButton("Завершить") { _, _ ->
+                findNavController().navigateUp()
+            }
+    }
 
     private fun setupListeners() {
-
         binding.toolbarNewPlaylist.setNavigationOnClickListener {
             viewModel.onBackClicked()
         }
@@ -83,8 +95,11 @@ class NewPlaylistFragment : Fragment() {
         }
 
         binding.createButton.setOnClickListener {
-            viewModel.onSaveButtonClicked()
+            val filePath = saveCoverToInternalStorage(viewModel.getCoverUri())
+            viewModel.createPlaylist(filePath)
         }
+
+
     }
 
     private fun setupViewModelObservers() {
@@ -93,34 +108,21 @@ class NewPlaylistFragment : Fragment() {
         }
 
         viewModel.finishScreen.observe(viewLifecycleOwner) { playlistName ->
-            val message = getString(R.string.playlist_created2, playlistName)
-            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-            findNavController().popBackStack()
+            Toast.makeText(requireContext(), "Плейлист $playlistName создан", Toast.LENGTH_SHORT).show()
+            findNavController().navigateUp()
         }
 
         viewModel.showConfirmDialog.observe(viewLifecycleOwner) {
-            MaterialAlertDialogBuilder(requireContext(), R.style.TextTrackView)
-                .setTitle(R.string.finish_creating_playlist)
-                .setMessage(R.string.al_unsaved_data)
-                .setNegativeButton(R.string.cancel2) { _, _ -> }
-                .setPositiveButton(R.string.finish) { _, _ ->
-                    findNavController().navigateUp()
-                }
-                .show()
-        }
-
-        viewModel.playlistDataToRender.observe(viewLifecycleOwner) { playlist ->
-            fillData(playlist)
+            confirmDialog.show()
         }
 
         viewModel.closeScreen.observe(viewLifecycleOwner) {
-            findNavController().popBackStack()
+            findNavController().navigateUp()
         }
     }
 
     private fun setupBackPressed() {
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     viewModel.onBackClicked()
@@ -128,30 +130,32 @@ class NewPlaylistFragment : Fragment() {
             })
     }
 
-    private fun fillData(playlist: Playlist) {
-        binding.nameEditText.setText(playlist.name)
-        binding.descriptionEditText.setText(playlist.description)
 
-        playlist.coverImagePath?.let { path ->
-            val uri = Uri.parse(path)
-            viewModel.getCoverUri(uri)
-            Glide.with(this)
-                .load(uri)
-                .placeholder(R.drawable.group_180)
-                .transform(
-                    CenterCrop(),
-                    RoundedCorners(resources.getDimensionPixelSize(R.dimen.grid_corner_radius))
-                )
-                .into(binding.coverImage)
+    private fun saveCoverToInternalStorage(uri: Uri?): String? {
+        if (uri == null) return null
+
+        val directory = File(requireContext().filesDir, "playlist_covers")
+        if (!directory.exists()) {
+            directory.mkdirs()
         }
+        val fileName = "cover_${System.currentTimeMillis()}.jpg"
+        val file = File(directory, fileName)
+
+        try {
+            requireContext().contentResolver.openInputStream(uri)?.use { inputStream ->
+                FileOutputStream(file).use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        }
+        return file.absolutePath
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        const val PLAYLIST_ID_KEY = "playlist_id_key"
     }
 }
