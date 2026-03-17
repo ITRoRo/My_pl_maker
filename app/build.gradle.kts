@@ -93,7 +93,8 @@ dependencies {
     debugImplementation(libs.ui.tooling)
     implementation(libs.accompanist.pager)
     implementation(libs.coil.compose)
-
+    implementation(libs.androidx.material.icons.core)
+    implementation(libs.androidx.material.icons.extended)
 }
 
 
